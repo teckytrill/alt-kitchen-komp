@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recipe Detail (by Name)</title>
+  <link rel="stylesheet" href="recipeDetail.css" />
+</head>
+
+<style>
+  /* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #F7F5EE; /* match the main page aesthetic */
+    color: #333;
+    overflow-y: auto; /* vertical scrolling */
+  }
+  
+  /* Header */
+  .recipe-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FFF;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  .back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .recipe-header h1 {
+    flex: 1;
+    text-align: center;
+    font-size: 1.25rem;
+    color: #A35C43;
+  }
+  .user-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ccc; /* placeholder for user icon */
+  }
+  
+  /* Recipe Hero Section (gray box for image) */
+  .recipe-hero {
+    background-color: #eee; 
+    width: 100%;
+    height: 200px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .recipe-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Overview (Name, stats, tags) */
+  .recipe-overview {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .recipe-main-info {
+    flex: 1;
+  }
+  .recipe-main-info h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .recipe-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .difficulty-tag {
+    background-color: #ddd; 
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+  
+  /* Tag badges (right side) */
+  .recipe-tags {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .tag-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px; 
+    height: 24px;
+    border-radius: 50%;
+    background-color: #BB65A0;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Accordion Container */
+  .accordion-container {
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Each Accordion Item */
+  .accordion-item {
+    margin-bottom: 1rem;
+  }
+  .accordion-item input[type="checkbox"] {
+    display: none; 
+  }
+  .accordion-title {
+    display: block;
+    background-color: #f3f3f3;
+    padding: 0.75rem;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 0.25rem;
+    position: relative;
+  }
+  .accordion-title::after {
+    content: "+";
+    position: absolute;
+    right: 1rem;
+  }
+  .accordion-item input[type="checkbox"]:checked + .accordion-title::after {
+    content: "-";
+  }
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0 1rem;
+  }
+  .accordion-item input[type="checkbox"]:checked ~ .accordion-content {
+    max-height: 400px; /* large enough for content */
+    padding: 1rem;
+  }
+  
+
+  /*Nutrition*/
+  
+  .nutrition-label {
+    width: 250px;
+    border: 2px solid #000;
+    padding: 0.5rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .nutrition-label .label-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+  
+  .nutrition-label .label-serving-size {
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .nutrition-label .label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+  
+  .nutrition-label .label-bold {
+    font-weight: bold;
+  }
+  
+  .nutrition-label .label-line {
+    border-top: 1px solid #000;
+    margin: 0.25rem 0;
+  }
+  
+  
+  /* Ingredients */
+  #ingredientsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .ingredient-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ingredient-name {
+    flex: 1;
+    font-weight: bold;
+  }
+  .ingredient-quantity {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Instructions */
+  #instructionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .instruction-step {
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 600px) {
+    .recipe-hero {
+      height: 150px;
+    }
+    .recipe-overview {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .nutrition-label {
+      width: 100%;
+    }
+  }
+
+  /* TAG POPUP OVERLAY */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none; /* hidden by default; show w/ script */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .popup-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+    max-width: 300px;
+    width: 80%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .close-popup-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .close-btn {
+    background: #eee;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+  }
+</style>
+<body>
+
+  <!-- Header -->
+  <header class="recipe-header">
+    <button class="back-button" onclick="goBack()">←</button>
+    <h1>Recipe Info</h1>
+    <div class="user-icon"></div>
+  </header>
+
+  <!-- Top Image / Hero Section -->
+  <section class="recipe-hero">
+    <img id="recipeImage" class="recipe-image" alt="Recipe Image" />
+  </section>
+
+  <!-- Overview (Name, Time, Feeds, Difficulty, Tags) -->
+  <section class="recipe-overview">
+    <div class="recipe-main-info">
+      <h2 id="recipeName">Recipe Name</h2>
+      <div class="recipe-stats">
+        <span id="recipeTime" class="stat-icon">--m</span>
+        <span id="recipeFeeds" class="stat-icon">Feeds #</span>
+        <span id="recipeDifficulty" class="difficulty-tag">---</span>
+      </div>
+    </div>
+    <div class="recipe-tags" id="recipeTags"></div>
+  </section>
+
+  <!-- Accordion sections for Nutrition, Ingredients, Instructions -->
+  <main class="accordion-container">
+    <div class="accordion-item">
+        <input type="checkbox" id="nutrition-accordion" />
+        <label for="nutrition-accordion" class="accordion-title">Nutritional Facts</label>
+        
+        <div class="accordion-content">
+          <!-- The .nutrition-label container -->
+          <div class="nutrition-label" id="nutritionFacts">
+            <!-- We'll fill this dynamically via JavaScript, but here is a sample placeholder: -->
+            
+            <!-- Title -->
+            <div class="label-title">Nutrition Facts</div>
+            
+            <!-- Serving Size -->
+            <div class="label-serving-size">Serving Size: 1 plate (about 200g)</div>
+            
+            <!-- Thin horizontal line -->
+            <div class="label-line"></div>
+            
+            <!-- Calories row -->
+            <div class="label-row">
+              <span class="label-bold">Calories</span>
+              <span>400</span>
+            </div>
+            
+            <!-- Another horizontal rule -->
+            <div class="label-line"></div>
+            
+            <!-- Fat -->
+            <div class="label-row">
+              <span class="label-bold">Total Fat</span>
+              <span>20g</span>
+            </div>
+            
+            <!-- Carbohydrates -->
+            <div class="label-row">
+              <span class="label-bold">Carbohydrates</span>
+              <span>50g</span>
+            </div>
+            
+            <!-- Protein -->
+            <div class="label-row">
+              <span class="label-bold">Protein</span>
+              <span>25g</span>
+            </div>
+            
+            <!-- Sodium -->
+            <div class="label-row">
+              <span class="label-bold">Sodium</span>
+              <span>600mg</span>
+            </div>
+            
+            <!-- Fiber -->
+            <div class="label-row">
+              <span class="label-bold">Fiber</span>
+              <span>5g</span>
+            </div>
+            
+            <!-- Sugars -->
+            <div class="label-row">
+              <span class="label-bold">Sugars</span>
+              <span>8g</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="accordion-item">
+      <input type="checkbox" id="ingredients-accordion" />
+      <label for="ingredients-accordion" class="accordion-title">Ingredients</label>
+      <div class="accordion-content" id="ingredientsList"></div>
+    </div>
+
+    <div class="accordion-item">
+      <input type="checkbox" id="instructions-accordion" />
+      <label for="instructions-accordion" class="accordion-title">Instructions</label>
+      <div class="accordion-content" id="instructionsList"></div>
+    </div>
+  </main>
+
+  <!-- Optional Tag Popup Overlay -->
+  <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+    <div class="popup-content" onclick="event.stopPropagation();">
+      <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
+      <h2 id="popupTagTitle">Tag:</h2>
+      <button class="close-btn" onclick="closeTagPopup()">Close</button>
+    </div>
+  </div>
+
+  <script src="recipeDetail.js"></script>
+</body>
+</html>
