@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile - Kitchen Kompanion</title>
+  <link rel="stylesheet" href="style/main.css" />
+  <style>
+    .profile-container {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #C8534C;
+  margin-bottom: 1rem;
+}
+
+.profile-name {
+  padding: 0.4rem 1.2rem;
+  border: 2px solid #C8534C;
+  color: #C8534C;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+
+    .profile-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .profile-option img {
+      width: 24px;
+      margin-right: 1rem;
+    }
+
+    .profile-option span {
+      font-weight: 500;
+      font-size: 1rem;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .profile-option svg {
+      color: #999;
+    }
+
+    .modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 400px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  margin-bottom: 1rem;
+}
+
+.section {
+  margin-bottom: 1rem;
+}
+
+.section label {
+  display: block;
+  margin: 6px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.save-btn {
+  background-color: #88d8b0;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+  <div class="ipad-frame">
+    <div class="ipad-camera"></div>
+    <header class="app-header">👤 My Profile</header>
+
+    <main class="app-content profile-container">
+      <img src="icons/profile-pic.jpeg" alt="Profile" class="profile-avatar" />
+      <div class="profile-name" id="profile-name">Griffin Temesgen</div>
+
+      <div class="profile-option">
+        <span><img src="icons/fav.png" alt="Favorite" />Favorite Ingredients</span>
+        <span>›</span>
+      </div>
+
+      <div class="profile-option">
+        <span><img src="icons/saved.png" alt="Saved" />Saved Recipes</span>
+        <input type="checkbox" />
+      </div>
+
+      <div class="profile-option" onclick="openDietaryModal()">
+        <span><img src="icons/diet.png" alt="Diet" /> Dietary Restrictions & Preferences</span>
+      </div>
+      
+    </main>
+
+    <nav class="app-navbar">
+      <a href="kitchen.html"><img src="icons/kitchen.svg" alt="Kitchen" /></a>
+      <a href="shoppinglist.html"><img src="icons/shoppinglist.svg" alt="Shopping List" /></a>
+      <a href="recipes.html"><img src="icons/recipes.svg" alt="Recipes" /></a>
+      <a href="profile.html"><img src="icons/profile.svg" alt="Profile" /></a>
+    </nav>
+  </div>
+
+  <div class="modal-overlay" id="dietary-modal">
+    <div class="modal-content">
+      <h3>🥦 Dietary Preferences</h3>
+  
+      <form id="dietary-form">
+        <div class="section">
+          <strong>🩺 Restrictions</strong>
+          <label><input type="checkbox" name="restrictions" value="Lactose-Free" /> Lactose-Free</label>
+          <label><input type="checkbox" name="restrictions" value="Gluten-Free" /> Gluten-Free</label>
+          <label><input type="checkbox" name="restrictions" value="Peanut Allergy" /> Peanut Allergy</label>
+          <label><input type="checkbox" name="restrictions" value="Kosher" /> Kosher</label>
+          <label><input type="checkbox" name="restrictions" value="Halal" /> Halal</label>
+        </div>
+  
+        <div class="section">
+          <strong>🌱 Preferences</strong>
+          <label><input type="checkbox" name="preferences" value="Vegan" /> Vegan</label>
+          <label><input type="checkbox" name="preferences" value="Vegetarian" /> Vegetarian</label>
+          <label><input type="checkbox" name="preferences" value="Pescatarian" /> Pescatarian</label>
+          <label><input type="checkbox" name="preferences" value="Keto" /> Keto</label>
+          <label><input type="checkbox" name="preferences" value="Paleo" /> Paleo</label>
+          <label><input type="checkbox" name="preferences" value="High-Protein" /> High-Protein</label>
+          <label><input type="checkbox" name="preferences" value="Low-Carb" /> Low-Carb</label>
+          <label><input type="checkbox" name="preferences" value="No Pork" /> No Pork</label>
+          <label><input type="checkbox" name="preferences" value="No Red Meat" /> No Red Meat</label>
+        </div>
+  
+        <div class="section">
+          <strong>✍️ Other</strong>
+          <input type="text" id="other-box" placeholder="Custom preference..." />
+        </div>
+  
+        <div class="modal-actions">
+          <button type="button" onclick="closeDietaryModal()">Cancel</button>
+          <button type="submit" class="save-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+
+  <script>
+    const username = localStorage.getItem("activeUser") || "Griffin Temesgen";
+    const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+    document.getElementById("profile-name").textContent = displayName;
+  
+    function openDietaryModal() {
+      document.getElementById("dietary-modal").classList.add("active");
+    }
+  
+    function closeDietaryModal() {
+      document.getElementById("dietary-modal").classList.remove("active");
+    }
+  
+    document.getElementById("dietary-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const restrictions = Array.from(document.querySelectorAll('input[name="restrictions"]:checked')).map(cb => cb.value);
+      const preferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked')).map(cb => cb.value);
+      const other = document.getElementById("other-box").value.trim();
+  
+      const data = {
+        restrictions,
+        preferences,
+        other
+      };
+  
+      localStorage.setItem(`dietaryPrefs_${username}`, JSON.stringify(data));
+      alert("Preferences saved!");
+      closeDietaryModal();
+    });
+  </script>
+  
+</body>
+</html>
