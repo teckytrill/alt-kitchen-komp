@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kitchen - Kitchen Kompanion</title>
+  <link rel="stylesheet" href="style/main.css" />
+</head>
+<body>
+  <div class="ipad-frame">
+    <div class="ipad-camera"></div>
+
+    <header class="app-header">🍳 Kitchen Kompanion</header>
+
+    <main class="app-content">
+      <h2>🥫 Kitchen Inventory</h2>
+
+      <!-- Location Tabs -->
+      <div class="location-tabs">
+        <button class="location-btn active" data-location="Fridge">🧊 Fridge</button>
+        <button class="location-btn" data-location="Pantry">🥫 Pantry</button>
+        <button class="location-btn" data-location="Freezer">❄️ Freezer</button>
+      </div>
+
+      <!-- Inventory Form -->
+      <form id="inventory-form">
+        <input type="text" id="item-name" placeholder="Item name" required />
+        <input type="number" id="item-qty" placeholder="Qty" required />
+        <select id="item-unit">
+          <option value="pcs">pcs</option>
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="cups">cups</option>
+          <option value="liters">liters</option>
+        </select>
+        <button type="submit">Add Item</button>
+      </form>
+
+      <!-- Inventory Display -->
+      <div class="inventory-scroll-container">
+        <ul id="inventory-list" class="inventory-list"></ul>
+      </div>
+    </main>
+
+    <nav class="app-navbar">
+      <a href="shoppinglist.html"><img src="icons/shoppinglist.svg" alt="Shopping List" /></a>
+      <a href="kitchen.html"><img src="icons/kitchen.svg" alt="Kitchen" /></a>
+      <a href="recipes.html"><img src="icons/recipes.svg" alt="Recipes" /></a>
+      <a href="profile.html"><img src="icons/profile.svg" alt="Profile" /></a>
+    </nav>
+  </div>
+
+  <script>
+    const form = document.getElementById('inventory-form');
+    const inventoryList = document.getElementById('inventory-list');
+    const locationButtons = document.querySelectorAll('.location-btn');
+
+   /*  const defaultItems = [
+  // Fridge items
+  { name: "Milk", qty: 1, unit: "L", location: "Fridge" },
+  { name: "Eggs", qty: 12, unit: "pcs", location: "Fridge" },
+  { name: "Cheese", qty: 200, unit: "g", location: "Fridge" },
+
+  // Pantry items
+  { name: "Rice", qty: 2, unit: "kg", location: "Pantry" },
+  { name: "Canned Beans", qty: 4, unit: "pcs", location: "Pantry" },
+  { name: "Olive Oil", qty: 1, unit: "L", location: "Pantry" },
+
+  // Freezer items
+  { name: "Chicken Breast", qty: 1, unit: "kg", location: "Freezer" },
+  { name: "Frozen Peas", qty: 500, unit: "g", location: "Freezer" },
+  { name: "Ice Cream", qty: 1, unit: "pcs", location: "Freezer" }
+]; */
+const user = localStorage.getItem("activeUser");
+if (!user) {
+  alert("You must log in first.");
+  window.location.href = "login.html";
+}
+
+let inventory = JSON.parse(localStorage.getItem(`kitchenInventory_${user}`)) || [];
+
+
+    let currentLocation = 'Fridge';
+
+    // Tab switching
+    locationButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        locationButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLocation = btn.dataset.location;
+        renderInventory();
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('item-name').value.trim();
+      const qty = document.getElementById('item-qty').value;
+      const unit = document.getElementById('item-unit').value;
+
+      if (!name) return;
+
+      inventory.push({ name, qty, unit, location: currentLocation });
+      form.reset();
+      renderInventory();
+    });
+
+    function renderInventory() {
+      inventoryList.innerHTML = '';
+      const filtered = inventory.filter(item => item.location === currentLocation);
+
+      filtered.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${item.qty} ${item.unit} — ${item.name}</span>
+                        <button onclick="removeItem(${i})">🗑</button>`;
+        inventoryList.appendChild(li);
+      });
+    }
+
+    function removeItem(index) {
+      inventory.splice(index, 1);
+      renderInventory();
+    }
+
+    function updateInventoryStorage() {
+  localStorage.setItem(`kitchenInventory_${user}`, JSON.stringify(inventory));
+}
+
+
+    renderInventory(); // Initial
+  </script>
+</body>
+</html>
