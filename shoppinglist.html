@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shopping List - Kitchen Kompanion</title>
+  <link rel="stylesheet" href="style/main.css" />
+</head>
+<body>
+  <div class="ipad-frame">
+    <div class="ipad-camera"></div>
+
+    <!-- Header -->
+    <header class="app-header" id="page-header">🛒 Shopping List</header>
+
+    <!-- Shopping List Content -->
+    <main class="app-content">
+      <h2>🛒 Shopping List</h2>
+
+      <form id="shopping-form">
+        <select id="item-location">
+          <option value="Fridge">Fridge</option>
+          <option value="Pantry">Pantry</option>
+          <option value="Freezer">Freezer</option>
+        </select>
+        <input type="text" id="item-name" placeholder="Item name" required />
+        <input type="number" id="item-qty" placeholder="Qty" required />
+        <select id="item-unit">
+          <option value="pcs">pcs</option>
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="cups">cups</option>
+          <option value="liters">liters</option>
+        </select>
+        <button type="submit">Add</button>
+      </form>
+
+      <button id="add-to-inventory-btn">➕ Add to Inventory</button>
+
+      <ul id="shopping-list"></ul>
+    </main>
+
+    <!-- Navigation -->
+    <nav class="app-navbar">
+      <a href="shoppinglist.html" title="Shopping List">
+        <img src="icons/shoppinglist.svg" alt="Shopping List" />
+      </a>
+      <a href="kitchen.html" title="Kitchen">
+        <img src="icons/kitchen.svg" alt="Kitchen" />
+      </a>
+      <a href="recipes.html" title="Recipes">
+        <img src="icons/recipes.svg" alt="Recipes" />
+      </a>
+      <a href="profile.html" title="Profile">
+        <img src="icons/profile.svg" alt="Profile" />
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // Auth check and personalization
+    const username = localStorage.getItem("activeUser");
+    if (!username) {
+      alert("You must log in first.");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("page-header").textContent = `🛒 ${capitalize(username)}'s Shopping List`;
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const form = document.getElementById('shopping-form');
+    const list = document.getElementById('shopping-list');
+    const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
+
+    let items = [];
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('item-name').value.trim();
+      const qty = document.getElementById('item-qty').value;
+      const unit = document.getElementById('item-unit').value;
+      const location = document.getElementById('item-location').value;
+
+      if (!name) return;
+
+      items.push({ name, qty, unit, location });
+      form.reset();
+      renderList();
+    });
+
+    function renderList() {
+      list.innerHTML = '';
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${item.qty} ${item.unit} — ${item.name} (${item.location})</span>
+          <button onclick="removeItem(${index})">🗑</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    function removeItem(index) {
+      items.splice(index, 1);
+      renderList();
+    }
+
+    addToInventoryBtn.addEventListener('click', () => {
+      const key = `kitchenInventory_${username}`;
+      const kitchenInventory = JSON.parse(localStorage.getItem(key)) || [];
+      const updated = [...kitchenInventory, ...items];
+      localStorage.setItem(key, JSON.stringify(updated));
+      alert("Items added to Kitchen Inventory!");
+      items = [];
+      renderList();
+    });
+
+    renderList();
+  </script>
+</body>
+</html>
