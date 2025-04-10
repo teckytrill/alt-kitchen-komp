@@ -22,6 +22,7 @@
         <button class="location-btn active" data-location="Fridge">🧊 Fridge</button>
         <button class="location-btn" data-location="Pantry">🥫 Pantry</button>
         <button class="location-btn" data-location="Freezer">❄️ Freezer</button>
+        <button class="location-btn" data-location="none">🔎 All Pantry Items</button> <!-- New filter -->
       </div>
 
       <!-- Inventory Form -->
@@ -51,163 +52,80 @@
       <a href="profile.html"><img src="icons/profile.svg" alt="Profile" /></a>
     </nav>
   </div>
-  
-  <!--
-
   <script>
+    const username = "amman123"; // Use the current logged-in username
   
-    const form = document.getElementById('inventory-form');
-    const inventoryList = document.getElementById('inventory-list');
+    if (!username) {
+      alert("You must log in first.");
+      window.location.href = "login.html";
+    }
+  
+    let inventory = []; // To store kitchen inventory for the user
+    let currentLocation = 'Fridge'; // Default location is Fridge
+
+    // Fetch user data from the API
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/users/${username}`);
+        if (!response.ok) {
+          throw new Error('User data not found');
+        }
+        const data = await response.json();
+        inventory = data.pantry || []; // Assuming `data.pantry` is your list of pantry items
+        renderInventory();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to load user data.");
+      }
+    }
+
+    // Location change logic
     const locationButtons = document.querySelectorAll('.location-btn');
-
-   /*  const defaultItems = [
-  // Fridge items
-  { name: "Milk", qty: 1, unit: "L", location: "Fridge" },
-  { name: "Eggs", qty: 12, unit: "pcs", location: "Fridge" },
-  { name: "Cheese", qty: 200, unit: "g", location: "Fridge" },
-
-  // Pantry items
-  { name: "Rice", qty: 2, unit: "kg", location: "Pantry" },
-  { name: "Canned Beans", qty: 4, unit: "pcs", location: "Pantry" },
-  { name: "Olive Oil", qty: 1, unit: "L", location: "Pantry" },
-
-  // Freezer items
-  { name: "Chicken Breast", qty: 1, unit: "kg", location: "Freezer" },
-  { name: "Frozen Peas", qty: 500, unit: "g", location: "Freezer" },
-  { name: "Ice Cream", qty: 1, unit: "pcs", location: "Freezer" }
-]; */
-const user = localStorage.getItem("activeUser");
-if (!user) {
-  alert("You must log in first.");
-  window.location.href = "login.html";
-}
-
-let inventory = JSON.parse(localStorage.getItem(`kitchenInventory_${user}`)) || [];
-
-
-    let currentLocation = 'Fridge';
-
-    // Tab switching
     locationButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         locationButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentLocation = btn.dataset.location;
-        renderInventory();
+        renderInventory(); // Re-render the inventory for the selected location
       });
     });
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('item-name').value.trim();
-      const qty = document.getElementById('item-qty').value;
-      const unit = document.getElementById('item-unit').value;
-
-      if (!name) return;
-
-      inventory.push({ name, qty, unit, location: currentLocation });
-      form.reset();
-      renderInventory();
-    });
-
+    // Render inventory based on the current location
     function renderInventory() {
+      const inventoryList = document.getElementById('inventory-list');
       inventoryList.innerHTML = '';
-      const filtered = inventory.filter(item => item.location === currentLocation);
 
-      filtered.forEach((item, i) => {
+      // Filter the items based on the current location (including 'none' for showing all items)
+      const filtered = inventory
+        .map((item, index) => ({ ...item, index }))
+        .filter(item => currentLocation === 'none' || item.storage === currentLocation || !item.storage); // Show all if 'none' is selected
+
+      filtered.forEach(({ name, quantity, storage, index }) => {
         const li = document.createElement('li');
-        li.innerHTML = `<span>${item.qty} ${item.unit} — ${item.name}</span>
-                        <button onclick="removeItem(${i})">🗑</button>`;
+        li.innerHTML = `
+          <span>${quantity} — ${name}${storage ? ` (Stored in: ${storage})` : ''}</span>
+          <button onclick="removeItem(${index})">🗑</button>
+        `;
         inventoryList.appendChild(li);
       });
     }
 
+    // Remove item from inventory
     function removeItem(index) {
       inventory.splice(index, 1);
+      updateUserData(); // Update the server with new inventory
       renderInventory();
     }
 
-    function updateInventoryStorage() {
-  localStorage.setItem(`kitchenInventory_${user}`, JSON.stringify(inventory));
-}
-function logoutUser() {
-    localStorage.removeItem("activeUser");
-    window.location.href = "login.html";
-  }
+    // Initial user data fetch
+    fetchUserData();
 
-    renderInventory(); // Initial
+  
+    // Logout logic
+    function logoutUser() {
+      localStorage.removeItem("activeUser");
+      window.location.href = "login.html";
+    }
   </script>
--->
-
-<script>
-  const form = document.getElementById('inventory-form');
-  const inventoryList = document.getElementById('inventory-list');
-  const locationButtons = document.querySelectorAll('.location-btn');
-
-  const user = localStorage.getItem("activeUser");
-  if (!user) {
-    alert("You must log in first.");
-    window.location.href = "login.html";
-  }
-
-  let inventory = JSON.parse(localStorage.getItem(`kitchenInventory_${user}`)) || [];
-  let currentLocation = 'Fridge';
-
-  locationButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      locationButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentLocation = btn.dataset.location;
-      renderInventory();
-    });
-  });
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('item-name').value.trim();
-    const qty = document.getElementById('item-qty').value;
-    const unit = document.getElementById('item-unit').value;
-
-    if (!name) return;
-
-    inventory.push({ name, qty, unit, location: currentLocation });
-    updateInventoryStorage();
-    form.reset();
-    renderInventory();
-  });
-
-  function renderInventory() {
-    inventoryList.innerHTML = '';
-    const filtered = inventory
-      .map((item, index) => ({ ...item, index }))
-      .filter(item => item.location === currentLocation);
-
-    filtered.forEach(({ name, qty, unit, index }) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${qty} ${unit} — ${name}</span>
-        <button onclick="removeItem(${index})">🗑</button>
-      `;
-      inventoryList.appendChild(li);
-    });
-  }
-
-  function removeItem(index) {
-    inventory.splice(index, 1);
-    updateInventoryStorage();
-    renderInventory();
-  }
-
-  function updateInventoryStorage() {
-    localStorage.setItem(`kitchenInventory_${user}`, JSON.stringify(inventory));
-  }
-
-  function logoutUser() {
-    localStorage.removeItem("activeUser");
-    window.location.href = "login.html";
-  }
-
-  renderInventory();
-</script>
 </body>
 </html>
