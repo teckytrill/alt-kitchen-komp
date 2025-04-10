@@ -557,5 +557,101 @@ function clearSearch() {
   document.querySelector('main').style.display = 'block';
 }
 
+function showFilterPopup() {
+  document.getElementById('filterOverlay').style.display = 'flex';
+}
+
+function closeFilterOverlay() {
+  document.getElementById('filterOverlay').style.display = 'none';
+}
+
+function applyFilters() {
+  // 1) Gather filter states
+  const servingSize = parseInt(document.getElementById('filterServingSize').value, 10);
+
+  // For difficulty, we have 3 checkboxes
+  const diffs = Array.from(document.getElementsByName('filterDifficulty'))
+    .filter(cb => cb.checked)
+    .map(cb => cb.value); // e.g. ["Easy", "Medium"]
+
+  // For tags, up to 3 drop-downs
+  const tag1 = document.getElementById('filterTag1').value;
+  const tag2 = document.getElementById('filterTag2').value;
+  const tag3 = document.getElementById('filterTag3').value;
+  const chosenTags = [tag1, tag2, tag3].filter(t => t !== "");
+
+  // For "use pantry" yes/no
+  let usePantry = "no";
+  const pantryRadios = document.getElementsByName('usePantry');
+  for (let r of pantryRadios) {
+    if (r.checked) {
+      usePantry = r.value;
+      break;
+    }
+  }
+
+  // 2) Combine all recipes
+  const allRecipes = [
+    ...(allData.savedRecipes || []),
+    ...(allData.recentlyViewedRecipes || []),
+    ...(allData.userRecipes || [])
+  ];
+
+  // 3) If we need the user's pantry, we might fetch or parse from users.json
+  // Or if we have a global user object, we do something like:
+  // for now let's assume we have userPantry array of items:
+  // e.g. userPantry = ["Eggs", "Flour", "Milk", ...]
+
+  let userPantry = [];
+  // If you already fetched users.json or have it somewhere:
+  // userPantry = userData.pantry.map(item => item.name.toLowerCase());
+
+  // 4) Filter
+  const filtered = allRecipes.filter(r => {
+    // a) Serving size condition
+    if (r.feeds > servingSize) return false;
+
+    // b) Difficulty condition (if diffs is non-empty)
+    if (diffs.length > 0 && !diffs.includes(r.difficulty)) {
+      return false;
+    }
+
+    // c) Tag condition
+    // For each chosen tag, check if recipe has it
+    if (chosenTags.length > 0) {
+      // must contain *all* chosen tags or *any*? Let's assume "all"
+      for (let t of chosenTags) {
+        if (!r.tags || !r.tags.includes(t)) {
+          return false;
+        }
+      }
+    }
+
+    // d) If usePantry = yes, check if we can make it
+    if (usePantry === "yes") {
+      // We want to see if every ingredient is in userPantry
+      // We'll do a simple match by name ignoring quantity
+      for (let ing of (r.ingredients || [])) {
+        const ingName = ing.item.name.toLowerCase().trim();
+        if (!userPantry.includes(ingName)) {
+          return false;
+        }
+      }
+    }
+    return true; // passes all stacked conditions
+  });
+
+  // 5) Display results
+  displaySearchResults(filtered);
+
+  // 6) Hide main sections, show results
+  document.querySelector('main').style.display = 'none';
+  document.getElementById('searchResultsSection').style.display = 'block';
+
+  // 7) Close the filter overlay
+  closeFilterOverlay();
+}
+
+
 
   
