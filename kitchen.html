@@ -25,7 +25,6 @@
       </div>
     </header>
 
-
     <main class="app-content">
 
       <!-- Location Tabs -->
@@ -63,18 +62,19 @@
       <a href="profile.html"><img src="icons/profile.svg" alt="Profile" /></a>
     </nav>
   </div>
+
   <script>
     const username = "amman123"; // Use the current logged-in username
-  
+
     if (!username) {
       alert("You must log in first.");
       window.location.href = "login.html";
     }
-  
-    let inventory = []; // To store kitchen inventory for the user
-    let currentLocation = 'Fridge'; // Default location is Fridge
 
-    // Fetch user data from the API
+    let inventory = [];
+    let currentLocation = 'Fridge';
+
+    // Fetch user data
     async function fetchUserData() {
       try {
         const response = await fetch(`http://localhost:3000/api/users/${username}`);
@@ -82,7 +82,7 @@
           throw new Error('User data not found');
         }
         const data = await response.json();
-        inventory = data.pantry || []; // Assuming `data.pantry` is your list of pantry items
+        inventory = data.pantry || [];
         renderInventory();
       } catch (error) {
         console.error(error);
@@ -90,53 +90,68 @@
       }
     }
 
-    // Location change logic
+    // Handle location switching
     const locationButtons = document.querySelectorAll('.location-btn');
     locationButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         locationButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentLocation = btn.dataset.location;
-        renderInventory(); // Re-render the inventory for the selected location
+        renderInventory();
       });
     });
 
-    // Render inventory based on the current location
+    // Render items
     function renderInventory() {
       const inventoryList = document.getElementById('inventory-list');
       inventoryList.innerHTML = '';
 
-      // Filter the items based on the current location (including 'none' for showing all items)
       const filtered = inventory
-        .map((item, index) => ({ ...item, index }))
-        .filter(item => currentLocation === 'none' || item.storage === currentLocation || !item.storage); // Show all if 'none' is selected
+        .filter(item => currentLocation === 'none' || item.storage === currentLocation || !item.storage);
 
-      filtered.forEach(({ name, quantity, storage, index }) => {
+      filtered.forEach(({ name, quantity, storage }) => {
+        const safeName = encodeURIComponent(name); // In case name has special characters
         const li = document.createElement('li');
         li.innerHTML = `
           <span>${quantity} — ${name}${storage ? ` (Stored in: ${storage})` : ''}</span>
-          <button onclick="removeItem(${index})">🗑</button>
+          <button onclick="removeItem('${safeName}')">🗑</button>
         `;
         inventoryList.appendChild(li);
       });
     }
 
-    // Remove item from inventory
-    function removeItem(index) {
-      inventory.splice(index, 1);
-      updateUserData(); // Update the server with new inventory
-      renderInventory();
+    // Remove item by name
+    function removeItem(encodedName) {
+      const name = decodeURIComponent(encodedName);
+      const index = inventory.findIndex(item => item.name === name);
+      if (index !== -1) {
+        inventory.splice(index, 1);
+        updateUserData(); // Persist changes
+        renderInventory();
+      }
     }
 
-    // Initial user data fetch
-    fetchUserData();
+    // Placeholder: Sync inventory with backend
+    function updateUserData() {
+      fetch(`http://localhost:3000/api/users/${username}/pantry`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pantry: inventory }),
+      }).catch(err => {
+        console.error('Failed to update user data:', err);
+      });
+    }
 
-  
-    // Logout logic
+    // Logout function
     function logoutUser() {
       localStorage.removeItem("activeUser");
       window.location.href = "login.html";
     }
+
+    // Load data on page load
+    fetchUserData();
   </script>
 </body>
 </html>
