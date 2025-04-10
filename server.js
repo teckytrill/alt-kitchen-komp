@@ -7,9 +7,9 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../')));
+app.use(express.static(__dirname));
 
-const userFilePath = path.join(__dirname, '../data/users.json');
+const userFilePath = path.join(__dirname, '/data/users.json');
 
 
 // Get user data by username
