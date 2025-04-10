@@ -297,6 +297,27 @@ function showTagMeaning(tag) {
     overlay.style.display = 'flex';
   }
 
+  function addIngredientRow() {
+    const container = document.getElementById('ingredientsContainer');
+    const row = document.createElement('div');
+    row.classList.add('ingredient-row');
+    row.innerHTML = `
+      <input type="text" placeholder="Ingredient Name" class="ing-name" required />
+      <input type="text" placeholder="Quantity" class="ing-qty" required />
+      <input type="text" placeholder="Unit or Details" class="ing-unit" />
+    `;
+    container.appendChild(row);
+  }
+  
+  function addInstructionRow() {
+    const container = document.getElementById('instructionsContainer');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Instruction step';
+    input.classList.add('instruction-step-input');
+    container.appendChild(input);
+  }
+
   function handleAddRecipeSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -307,24 +328,26 @@ function showTagMeaning(tag) {
     const feeds = parseInt(form.feeds.value, 10) || 1;
     const difficulty = form.difficulty.value;
     
-    const ingredientsLines = form.ingredients.value.trim().split("\n");
-    const ingredients = ingredientsLines
-      .filter(line => line.trim().length > 0)
-      .map(line => {
-        const parts = line.split("|").map(p => p.trim());
-        return {
-          quantity: parts[0] || "",
-          item: {
-            name: parts[1] || "",
-            details: parts[2] || ""
-          }
-        };
-      });
-  
-    const stepsLines = form.steps.value.trim().split("\n");
-    const steps = stepsLines
-      .filter(line => line.trim().length > 0)
-      .map(line => line.trim());
+    const ingredientRows = document.querySelectorAll('#ingredientsContainer .ingredient-row');
+    const ingredients = Array.from(ingredientRows).map(row => {
+    const name = row.querySelector('.ing-name').value.trim();
+    const quantity = row.querySelector('.ing-qty').value.trim();
+    const details = row.querySelector('.ing-unit').value.trim();
+
+      return {
+        quantity: quantity,
+        item: {
+          name: name,
+          details: details
+        }
+      };
+    });
+
+    // Get instructions from inputs
+    const instructionInputs = document.querySelectorAll('.instruction-step-input');
+    const steps = Array.from(instructionInputs)
+      .map(input => input.value.trim())
+      .filter(step => step.length > 0);
   
     const tags = [];
     if (form.tag1.value.trim()) tags.push(form.tag1.value.trim());

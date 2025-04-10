@@ -314,22 +314,92 @@
     font-size: 0.9rem;
     color: #666;
   }
-  .tags-container {
+    .tags-container {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .tag-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #BB65A0;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+
+      .popup-content form {
     display: flex;
-    gap: 0.25rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
   }
-  .tag-badge {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #BB65A0;
-    color: #fff;
-    font-size: 0.75rem;
+
+  .popup-content form input,
+  .popup-content form select,
+  .popup-content form textarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    background-color: #fefefe;
+  }
+
+  .popup-content form label {
     font-weight: bold;
+    color: #A35C43;
+  }
+
+  .submit-recipe-btn {
+    background-color: #A35C43;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-top: 1rem;
     cursor: pointer;
+  }
+
+  .submit-recipe-btn:hover {
+    background-color: #884836;
+  }
+
+      .dynamic-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .ingredient-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .ingredient-row input {
+      flex: 1;
+    }.dynamic-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .ingredient-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .ingredient-row input {
+      flex: 1;
+    }
+
   }
 
   </style>
@@ -451,26 +521,50 @@
         </select>
       
         <!-- Ingredients -->
-        <label>Ingredients (one per line: quantity|item name|details)</label>
-        <textarea 
-          name="ingredients" 
-          rows="4" 
-          placeholder="e.g.\n1|Romaine Lettuce|chopped\n1|Chicken Breast|grilled and sliced"></textarea>
-      
-        <!-- Steps -->
-        <label>Steps (one instruction per line)</label>
-        <textarea 
-          name="steps" 
-          rows="4" 
-          placeholder="e.g.\nWash and chop the romaine lettuce.\nGrill chicken breast."></textarea>
+        <label>Ingredients</label>
+        <div id="ingredientsContainer" class="dynamic-field-group">
+          <!-- Ingredient rows go here -->
+        </div>
+        <button type="button" onclick="addIngredientRow()">+ Add Ingredient</button>
+
+        <!-- Instructions -->
+        <label>Instructions</label>
+        <div id="instructionsContainer" class="dynamic-field-group">
+          <!-- Instruction rows go here -->
+        </div>
+        <button type="button" onclick="addInstructionRow()">+ Add Step</button>
       
         <!-- Tags (up to 3) -->
-        <label>Tag 1</label>
-        <input type="text" name="tag1" placeholder="e.g. Salad" />
-        <label>Tag 2</label>
-        <input type="text" name="tag2" placeholder="e.g. Lunch" />
-        <label>Tag 3</label>
-        <input type="text" name="tag3" placeholder="e.g. Quick" />
+        <label>Meal Type</label>
+        <select name="tag1">
+          <option value="">Select</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Dessert">Dessert</option>
+          <option value="Snack">Snack</option>
+        </select>
+        
+        <label>Dietary Preference</label>
+        <select name="tag2">
+          <option value="">Select</option>
+          <option value="Halal">Halal</option>
+          <option value="Kosher">Kosher</option>
+          <option value="Vegan">Vegan</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Dairy Free">Dairy Free</option>
+          <option value="Gluten Free">Gluten Free</option>
+        </select>
+        
+        <label>Extra Tag</label>
+        <select name="tag3">
+          <option value="">Select</option>
+          <option value="Low Cost">Low Cost</option>
+          <option value="Quick">Quick</option>
+          <option value="Simple">Simple</option>
+          <option value="Beginner Friendly">Beginner Friendly</option>
+        </select>
+        
       
         <!-- Nutrition -->
         <h3>Nutrition</h3>
@@ -489,7 +583,7 @@
             <option value="mg">mg</option>
           </select>
         </div>
-      
+    
         <label>Carbs</label>
         <div class="nutrition-row">
           <input type="number" name="carbsValue" placeholder="e.g. 50" />
