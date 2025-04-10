@@ -183,6 +183,15 @@
     cursor: pointer;
   }
 
+    .filter-btn {
+    margin-left: 0.5rem;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
   /* Bottom Nav */
   .bottom-nav {
     position: fixed;
@@ -429,15 +438,18 @@
       </div>
     </header>
 
-    <!-- Search Section -->
+        <!-- Search Section -->
     <section class="search-section">
-      <input 
-        type="text" 
-        id="searchBar" 
-        placeholder="Search for Recipes..." 
+      <input
+        type="text"
+        id="searchBar"
+        placeholder="Search for Recipes..."
         class="search-input"
       />
       <button class="search-btn" onclick="handleSearch()">🔍</button>
+
+      <!-- NEW FILTER BUTTON -->
+      <button class="filter-btn" onclick="showFilterPopup()">⚙️ Filter</button>
     </section>
 
     <!-- Search Results (initially hidden) -->
@@ -508,6 +520,104 @@
         </div>
       </div>
     </main>
+
+    <!-- Filter Overlay -->
+<div id="filterOverlay" class="overlay" onclick="closeFilterOverlay()">
+  <div class="popup-content" onclick="event.stopPropagation();">
+    <button class="close-popup-btn" onclick="closeFilterOverlay()">X</button>
+    <h2>Filter Recipes</h2>
+
+    <!-- Serving Size -->
+    <label>Serving Size: <span id="servingSizeValue">5</span></label>
+    <input
+      type="range"
+      id="filterServingSize"
+      min="1"
+      max="10"
+      value="5"
+      oninput="document.getElementById('servingSizeValue').textContent = this.value"
+    />
+
+    <!-- Difficulty checkboxes -->
+    <div style="margin-top:1rem;">
+      <label>Difficulty:</label><br/>
+      <label><input type="checkbox" name="filterDifficulty" value="Easy"/> Easy</label><br/>
+      <label><input type="checkbox" name="filterDifficulty" value="Medium"/> Medium</label><br/>
+      <label><input type="checkbox" name="filterDifficulty" value="Hard"/> Hard</label>
+    </div>
+
+    <!-- Tags select (you can do multi-select or checkboxes) -->
+    <div style="margin-top:1rem;">
+      <label>Tag(s):</label><br/>
+      <select id="filterTag1">
+        <option value="">(None)</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Snack">Snack</option>
+        <option value="Halal">Halal</option>
+        <option value="Kosher">Kosher</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Dairy Free">Dairy Free</option>
+        <option value="Gluten Free">Gluten Free</option>
+        <option value="Low Cost">Low Cost</option>
+        <option value="Quick">Quick</option>
+        <option value="Simple">Simple</option>
+        <option value="Beginner Friendly">Beginner Friendly</option>
+      </select>
+      <select id="filterTag2">
+        <option value="">(None)</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Snack">Snack</option>
+        <option value="Halal">Halal</option>
+        <option value="Kosher">Kosher</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Dairy Free">Dairy Free</option>
+        <option value="Gluten Free">Gluten Free</option>
+        <option value="Low Cost">Low Cost</option>
+        <option value="Quick">Quick</option>
+        <option value="Simple">Simple</option>
+        <option value="Beginner Friendly">Beginner Friendly</option>
+      </select>
+      <select id="filterTag3">
+        <option value="">(None)</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Snack">Snack</option>
+        <option value="Halal">Halal</option>
+        <option value="Kosher">Kosher</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Dairy Free">Dairy Free</option>
+        <option value="Gluten Free">Gluten Free</option>
+        <option value="Low Cost">Low Cost</option>
+        <option value="Quick">Quick</option>
+        <option value="Simple">Simple</option>
+        <option value="Beginner Friendly">Beginner Friendly</option>
+      </select>
+    </div>
+
+        <!-- Use Pantry toggle -->
+        <div style="margin-top:1rem;">
+          <label>Only recipes I can make with my pantry?</label><br/>
+          <label><input type="radio" name="usePantry" value="yes"/> Yes</label>
+          <label><input type="radio" name="usePantry" value="no" checked/> No</label>
+        </div>
+
+        <!-- Apply filter button -->
+        <button class="submit-recipe-btn" style="margin-top:1rem;" onclick="applyFilters()">
+          Apply Filters
+        </button>
+      </div>
+    </div>
 
     <!-- Add Recipe Overlay -->
     <div id="addRecipeOverlay" class="overlay" onclick="closeAddRecipeForm()">

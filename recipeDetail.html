@@ -282,6 +282,89 @@
     margin-top: 1rem;
     cursor: pointer;
   }
+
+  #ratingModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+#starRating {
+  text-align: center;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.star {
+  cursor: pointer;
+  padding: 0 0.3rem;
+}
+
+.star.selected {
+  color: gold;
+}
+
+/* Notes Section */
+.notes-section {
+  padding: 1rem;
+  background-color: #fff;
+  margin: 1rem 0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.notes-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #A35C43;
+}
+
+/* Container for individual note cards */
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Style for each note card */
+.note-card {
+  background-color: #F7F5EE;
+  border-left: 4px solid #A35C43;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  font-size: 0.95rem;
+}
+
+/* Add Note Button */
+.add-note-btn {
+  background-color: #A35C43;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Add Note Modal adjustments (reusing your popup-content style) */
+#addNoteOverlay .popup-content textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+  font-family: Arial, sans-serif;
+}
+
 </style>
 <body>
 
@@ -391,6 +474,12 @@
     </div>
   </main>
 
+    <!-- In recipeDetail.html, perhaps below the overview section -->
+  <div class="rating-container">
+    <button id="rateRecipeBtn" onclick="showRatingModal()">Rate Recipe</button>
+    <span id="currentRatingDisplay"></span>
+  </div>
+
   <!-- Optional Tag Popup Overlay -->
   <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
     <div class="popup-content" onclick="event.stopPropagation();">
@@ -399,6 +488,45 @@
       <button class="close-btn" onclick="closeTagPopup()">Close</button>
     </div>
   </div>
+
+  <!-- Rating Modal Overlay -->
+<div id="ratingModal" class="overlay" onclick="closeRatingModal()">
+  <div class="popup-content" onclick="event.stopPropagation();">
+    <button class="close-popup-btn" onclick="closeRatingModal()">X</button>
+    <h2>Rate this Recipe</h2>
+    <div id="starRating">
+      <!-- Star icons will be inserted here -->
+      <!-- Alternatively, you can include five star icons here -->
+      <span class="star" data-value="1">☆</span>
+      <span class="star" data-value="2">☆</span>
+      <span class="star" data-value="3">☆</span>
+      <span class="star" data-value="4">☆</span>
+      <span class="star" data-value="5">☆</span>
+    </div>
+    <button class="submit-recipe-btn" onclick="submitRating()">Submit Rating</button>
+  </div>
+</div>
+
+  <!-- Notes Section -->
+  <section class="notes-section">
+    <h2>My Notes</h2>
+    <div id="notesContainer" class="notes-container">
+      <!-- Individual note cards will be injected here -->
+    </div>
+    <button class="add-note-btn" onclick="showAddNoteModal()">Add Note</button>
+  </section>
+
+  <!-- Add Note Modal Overlay -->
+  <div id="addNoteOverlay" class="overlay" onclick="closeAddNoteModal()">
+    <div class="popup-content" onclick="event.stopPropagation();">
+      <button class="close-popup-btn" onclick="closeAddNoteModal()">X</button>
+      <h2>Add Note</h2>
+      <textarea id="newNoteText" rows="3" placeholder="Enter your note here..."></textarea>
+      <button class="submit-recipe-btn" onclick="submitNote()">Submit Note</button>
+    </div>
+  </div>
+
+  
 
   <script src="script/recipeDetail.js"></script>
 </body>
