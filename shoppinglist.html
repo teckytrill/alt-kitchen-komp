@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shopping List - Kitchen Kompanion</title>
+
+<!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plaster&display=swap" rel="stylesheet">
+
+
   <link rel="stylesheet" href="style/main.css" />
 </head>
 <body>
@@ -11,11 +18,15 @@
     <div class="ipad-camera"></div>
 
     <!-- Header -->
-    <header class="app-header">K</header>
+    <header class="app-header">
+      <div class="header-content">
+        <h2>K</h2>
+        <h3>Shopping List</h3>
+      </div>
+    </header>
 
     <!-- Shopping List Content -->
     <main class="app-content">
-      <h2 id="page-header">🛒 Shopping List</h2>
 
       <form id="shopping-form">
         <select id="item-location">
@@ -58,155 +69,123 @@
   </div>
 
   <script>
-  /*
-    // Auth check and personalization
-    const username = localStorage.getItem("activeUser");
-    if (!username) {
-      alert("You must log in first.");
-      window.location.href = "login.html";
-    }
+  const username = "amman123";
 
-    document.getElementById("page-header").textContent = `🛒 ${capitalize(username)}'s Shopping List`;
+  console.log("username " + username);
+  if (!username) {
+    alert("You must log in first.");
+    window.location.href = "login.html";
+  }
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+  document.getElementById("page-header").textContent = `🛒 ${capitalize(username)}'s Shopping List`;
 
-    const form = document.getElementById('shopping-form');
-    const list = document.getElementById('shopping-list');
-    const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-    let items = [];
+  const form = document.getElementById('shopping-form');
+  const list = document.getElementById('shopping-list');
+  const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('item-name').value.trim();
-      const qty = document.getElementById('item-qty').value;
-      const unit = document.getElementById('item-unit').value;
-      const location = document.getElementById('item-location').value;
-
-      if (!name) return;
-
-      items.push({ name, qty, unit, location });
-      form.reset();
-      renderList();
-    });
-
-    function renderList() {
-      list.innerHTML = '';
-      items.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${item.qty} ${item.unit} — ${item.name} (${item.location})</span>
-          <button onclick="removeItem(${index})">🗑</button>`;
-        list.appendChild(li);
-      });
-    }
-
-    function removeItem(index) {
-      items.splice(index, 1);
-      renderList();
-    }
-
-    addToInventoryBtn.addEventListener('click', () => {
-      const key = `kitchenInventory_${username}`;
-      const kitchenInventory = JSON.parse(localStorage.getItem(key)) || [];
-      const updated = [...kitchenInventory, ...items];
-      localStorage.setItem(key, JSON.stringify(updated));
-      alert("Items added to Kitchen Inventory!");
-      items = [];
-      renderList();
-    });
-
-    renderList();
-    */
-
-
-    const username = localStorage.getItem("activeUser");
-    if (!username) {
-      alert("You must log in first.");
-      window.location.href = "login.html";
-    }
-
-    document.getElementById("page-header").textContent = `🛒 ${capitalize(username)}'s Shopping List`;
-
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    const form = document.getElementById('shopping-form');
-    const list = document.getElementById('shopping-list');
-    const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
-
-    // Load data from localStorage
-    const userData = JSON.parse(localStorage.getItem("user.json")) || {};
-    const ingredientsData = JSON.parse(localStorage.getItem("ingredient.json")) || {};
-
-    const user = userData[username] || { shoppingList: [], kitchenInventory: [] };
-    userData[username] = user; // Ensure key exists
-
-    // Render list
-    function renderList() {
-      list.innerHTML = '';
-      user.shoppingList.forEach((item, index) => {
-        const info = ingredientsData[item.id] || { name: item.id };
-        const unit = item.unit || info.defaultUnit || "pcs";
-        const location = info.location || "Unknown";
-
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${item.qty} ${unit} — ${info.name} (${location})</span>
-          <button onclick="removeItem(${index})">🗑</button>`;
-        list.appendChild(li);
-      });
-    }
-
-    function removeItem(index) {
-      user.shoppingList.splice(index, 1);
-      saveUserData();
-      renderList();
-    }
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('item-name').value.trim().toLowerCase();
-      const qty = parseFloat(document.getElementById('item-qty').value);
-      const unit = document.getElementById('item-unit').value;
-
-      if (!name || isNaN(qty)) return;
-
-      // Add new ingredient to ingredient.json if missing
-      if (!ingredientsData[name]) {
-        ingredientsData[name] = {
-          name: capitalize(name),
-          defaultUnit: unit,
-          location: document.getElementById('item-location').value
-        };
-        localStorage.setItem("ingredient.json", JSON.stringify(ingredientsData));
+  // Fetch user data from the API
+  async function fetchUserData() {
+    try {
+      const response = await fetch(`http://localhost:3000/api/users/${username}`); // Make sure this matches the correct API endpoint
+      if (!response.ok) {
+        throw new Error('User data not found');
       }
-
-      // Add to user shopping list
-      user.shoppingList.push({ id: name, qty, unit });
-      saveUserData();
-      form.reset();
-      renderList();
-    });
-
-    addToInventoryBtn.addEventListener('click', () => {
-      user.kitchenInventory.push(...user.shoppingList);
-      user.shoppingList = [];
-      saveUserData();
-      alert("Items added to Kitchen Inventory!");
-      renderList();
-    });
-
-    function saveUserData() {
-      localStorage.setItem("user.json", JSON.stringify(userData));
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load user data.");
     }
+  }
 
+  // Update the user data on the server
+  async function updateUserData() {
+    const shoppingList = user.shoppingList;
+    const kitchenInventory = user.kitchenInventory;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/users/${username}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shoppingList, kitchenInventory }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update user data');
+      }
+      const result = await response.json();
+      alert(result.message);
+    } catch (error) {
+      console.error(error);
+      alert("Error updating user data.");
+    }
+  }
+
+
+  // Initialize user data
+  let user = { shoppingList: [], kitchenInventory: [] };
+
+  // Fetch user data from the API
+  fetchUserData().then(data => {
+    if (data) {
+      // Ensure shoppingLists and main exist before accessing
+      user = {
+        shoppingList: data.shoppingLists?.main?.ingredients || [], // Use optional chaining and provide a fallback
+        kitchenInventory: data.pantry || [], // Fallback for pantry as well
+      };
+      renderList();
+    }
+  });
+
+  // Render shopping list
+  function renderList() {
+    list.innerHTML = '';
+    user.shoppingList.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>${item.quantity} ${item.name}</span>
+        <button onclick="removeItem(${index})">🗑</button>`;
+      list.appendChild(li);
+    });
+  }
+
+
+  // Remove item from shopping list
+  function removeItem(index) {
+    user.shoppingList.splice(index, 1);
+    updateUserData(); // Update the server with new shopping list
+    renderList();
+  }
+
+  // Add item to shopping list
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('item-name').value.trim();
+    const qty = parseInt(document.getElementById('item-qty').value);
+    const unit = document.getElementById('item-unit').value;
+
+    if (!name || isNaN(qty)) return;
+
+    user.shoppingList.push({ name, quantity: `${qty} ${unit}` });
+    updateUserData(); // Update the server with new shopping list
+    form.reset();
     renderList();
 
+    console.log(user.shoppingList);
+  });
 
-  </script>
+  // Add to kitchen inventory
+  addToInventoryBtn.addEventListener('click', () => {
+    user.kitchenInventory.push(...user.shoppingList);
+    user.shoppingList = [];
+    updateUserData(); // Update the server with kitchen inventory and cleared shopping list
+    alert("Items added to Kitchen Inventory!");
+    renderList();
+  });
+</script>
+
 </body>
 </html>

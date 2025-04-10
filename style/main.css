@@ -1,3 +1,68 @@
+/* Variables used for pretty much everything */
+:root {
+
+  /* Color Styles */
+  --dark-grey: #4F6259;
+  --burnt-orange: #B55136;
+  --cream: #FFFBD5;
+  --dark-cream: #ECE3AA;
+  --aqua: #A8CABA;
+  --dark-aqua: #84B0AB;
+  --black: #202124;
+  --white: #FFFFF9;
+
+  --red: #CC4853;
+  --dark-red: #641616;
+  --yellow: #F5D37A;
+  --dark-yellow: #824510;
+  --green: #95B55F;
+  --dark-green: #274432;
+
+  --light-grey: #E4E8E4;
+  --grey: #D6DCD9;
+  --shadow-grey: #9AAAA2;
+  --dark-shadow-grey: #3E4843;
+
+  /* Shadows and Effect Styles */
+  --drop-down-shadow: 0px 1.6px 0px 0px rgba(79, 98, 89, 0.10);
+  --box-shadow: 
+    0px 3.2px 3.2px 0px rgba(0, 0, 0, 0.25), 
+    0px 1.6px 0px 0px rgba(79, 98, 89, 0.10);
+  --inset-shadow: 0px 3px 2px 0px rgba(79, 98, 89, 0.10) inset;
+
+  /* Text styling */
+  --font-small-bold-family: 'Lexend';
+  --font-small-bold-size: 12.8px; /* 16px * 0.8 */
+  --font-small-bold-style: normal;
+  --font-small-bold-weight: 400;
+  --font-small-bold-line-height: normal;
+
+  --font-paragraph-family: Lexend;
+  --font-paragraph-size: 16px; /* 20px * 0.8 */
+  --font-paragraph-style: normal;
+  --font-paragraph-weight: 300;
+  --line-paragraph-height: normal;
+  
+  --font-paragraph-bold-weight: 400;
+
+  --radius-pill: 100px;
+  --button-height: 27.2px;
+  --button-padding: 5px 12.8px;
+  --button-gap: 9.6px;
+  --dropdown-padding: 9.6px;
+  --dropdown-gap: 6px;
+  --text-field-width: 40px;
+  --text-field-max-width: 80px;
+  --outline-default: 1.5px solid var(--shadow-grey);
+  --outline-focus: 1.5px dashed var(--shadow-grey);
+
+}
+
+* {
+  font-family: var(--font-paragraph-family);
+}
+
+
 body {
   margin: 0;
   background: #f0f0f0;
@@ -227,4 +292,40 @@ display: block;
 
 .logout-btn:hover {
   background-color: #e05550;
+}
+
+
+/*********** HEADERS ***********/
+.app-header {
+  display: flex;
+  align-items: center; /* Vertically centers the elements */
+  justify-content: space-between; /* Space between "K" and "Shopping List" */
+  width: 100%; /* Make sure it takes the full width of the container */
+  padding: 0px 0px;
+  background: var(--white);
+}
+
+.app-header h2 {
+  color: var(--burnt-orange);
+  font-family: Plaster;
+  font-size: 76px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0; /* Remove default margin */
+}
+
+.app-header h3 {
+  color: var(--burnt-orange);
+  font-family: Lexend;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0; /* Remove default margin */
+}
+
+.header-content {
+  display: flex;
+  align-items: center; /* Vertically centers "K" and "Shopping List" */
+  justify-content: flex-start; /* Aligns items to the left */
+  gap: 20px; /* Space between "K" and "Shopping List" */
 }
