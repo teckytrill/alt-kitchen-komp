@@ -241,7 +241,7 @@
   }
 
   .floating-add-btn {
-    position: fixed;
+    position: absolute;
     right: 1rem;
     bottom: 70px; /* slightly above bottom nav if you have one */
     width: 48px;
@@ -403,33 +403,41 @@
   }
 
   </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Recipes</title>
+  <link rel="stylesheet" href="style/main.css" />
+</head>
 <body>
-  <!-- Header -->
+  <!-- iPad frame container -->
   <div class="ipad-frame">
     <div class="ipad-camera"></div>
+
+    <!-- Header -->
     <header class="app-header">
-        <div class="logo">
-          <span class="logo-letter">K</span>
-        </div>
-        <h1 class="page-title">My Recipes</h1>
-        <div class="recipe-finder-tab">
-          <span>Recipe Finder</span>
-          <button class="edit-btn">✎</button>
-        </div>
-      </header>
-      <!-- Search Section -->
-  <section class="search-section">
-    <input 
-      type="text" 
-      id="searchBar" 
-      placeholder="Search for Recipes..." 
-      class="search-input"
-    />
-    <button class="search-btn" onclick="handleSearch()">🔍</button>
-  </section>
+      <div class="logo">
+        <span class="logo-letter">K</span>
+      </div>
+      <div class="recipe-finder-tab">
+        <button class="edit-btn">✎</button>
+      </div>
+    </header>
 
+    <!-- Search Section -->
+    <section class="search-section">
+      <input 
+        type="text" 
+        id="searchBar" 
+        placeholder="Search for Recipes..." 
+        class="search-input"
+      />
+      <button class="search-btn" onclick="handleSearch()">🔍</button>
+    </section>
 
-      <!-- Container for search results (initially hidden) -->
+    <!-- Search Results (initially hidden) -->
     <section id="searchResultsSection" class="search-results-section" style="display: none;">
       <div class="search-results-header">
         <h2>Search Results</h2>
@@ -439,9 +447,9 @@
         <!-- We'll inject narrower recipe cards here via JS -->
       </div>
     </section>
-  <!-- Main Content -->
-  <main>
-    <!-- Browse Recipes Section (DYNAMIC) -->
+
+    <main>
+      <!-- Browse Recipes -->
       <section class="browse-section">
         <div class="section-header">
           <h2>Browse Recipes</h2>
@@ -452,209 +460,208 @@
         </div>
       </section>
 
-    <!-- Saved Recipes Section (DYNAMIC) -->
-    <section class="saved-section">
-      <div class="section-header">
-        <h2>Saved Recipes</h2>
-        <button class="view-all-btn">View All ►</button>
-      </div>
-      <div class="horizontal-scroll saved-recipes-container">
-        <!-- Recipe cards will be injected here by script.js -->
-      </div>
-    </section>
+      <!-- Saved Recipes -->
+      <section class="saved-section">
+        <div class="section-header">
+          <h2>Saved Recipes</h2>
+          <button class="view-all-btn">View All ►</button>
+        </div>
+        <div class="horizontal-scroll saved-recipes-container">
+          <!-- Dynamically populated by script.js -->
+        </div>
+      </section>
 
-    <!-- Recently Viewed Recipes Section (DYNAMIC) -->
-    <section class="recently-viewed-section">
-      <div class="section-header">
-        <h2>Recently Viewed Recipes</h2>
-        <button class="view-all-btn">View All ►</button>
-      </div>
-      <div class="horizontal-scroll recently-viewed-container">
-        <!-- Dynamically populated from JSON -->
-      </div>
-    </section>
+      <!-- Recently Viewed Recipes -->
+      <section class="recently-viewed-section">
+        <div class="section-header">
+          <h2>Recently Viewed Recipes</h2>
+          <button class="view-all-btn">View All ►</button>
+        </div>
+        <div class="horizontal-scroll recently-viewed-container">
+          <!-- Dynamically populated by script.js -->
+        </div>
+      </section>
 
-    <section class="my-recipes-section">
-      <div class="section-header">
-        <h2>My Recipes</h2>
-        <button class="view-all-btn">View All ►</button>
-      </div>
-      <div class="horizontal-scroll my-recipes-container">
-        <!-- Dynamically populated by script.js -->
-      </div>
-    </section>
+      <!-- My Recipes -->
+      <section class="my-recipes-section">
+        <div class="section-header">
+          <h2>My Recipes</h2>
+          <button class="view-all-btn">View All ►</button>
+        </div>
+        <div class="horizontal-scroll my-recipes-container">
+          <!-- Dynamically populated by script.js -->
+        </div>
+      </section>
 
-    <button class="floating-add-btn" onclick="showAddRecipeForm()">+</button>
+      <!-- Floating + Button for Add Recipe -->
+      <button class="floating-add-btn" onclick="showAddRecipeForm()">+</button>
 
-    <!-- Popup Overlay & Content (initially hidden) -->
-    <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+      <!-- Tag Popup Overlay -->
+      <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+        <div class="popup-content" onclick="event.stopPropagation();">
+          <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
+          <h2 id="popupTagTitle">Tag</h2>
+          <button class="close-btn" onclick="closeTagPopup()">Close</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Add Recipe Overlay -->
+    <div id="addRecipeOverlay" class="overlay" onclick="closeAddRecipeForm()">
       <div class="popup-content" onclick="event.stopPropagation();">
-        <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
-        <h2 id="popupTagTitle">Tag</h2>
-        <button class="close-btn" onclick="closeTagPopup()">Close</button>
+        <button class="close-popup-btn" onclick="closeAddRecipeForm()">X</button>
+        <h2>Add a New Recipe</h2>
+
+        <form id="addRecipeForm" onsubmit="handleAddRecipeSubmit(event)">
+          <!-- Basic Info -->
+          <label>Recipe Name</label>
+          <input type="text" name="recipeName" required />
+
+          <label>Time (minutes)</label>
+          <input type="number" name="length" required />
+
+          <label>Feeds (number)</label>
+          <input type="number" name="feeds" required />
+
+          <label>Difficulty</label>
+          <select name="difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+
+          <!-- Ingredients -->
+          <label>Ingredients</label>
+          <div id="ingredientsContainer" class="dynamic-field-group">
+            <!-- Ingredient rows go here -->
+          </div>
+          <button type="button" onclick="addIngredientRow()">+ Add Ingredient</button>
+
+          <!-- Instructions -->
+          <label>Instructions</label>
+          <div id="instructionsContainer" class="dynamic-field-group">
+            <!-- Instruction rows go here -->
+          </div>
+          <button type="button" onclick="addInstructionRow()">+ Add Step</button>
+
+          <!-- Tags (Meal Type, Dietary Preference, Extra Tag) -->
+          <label>Meal Type</label>
+          <select name="tag1">
+            <option value="">Select</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Snack">Snack</option>
+          </select>
+
+          <label>Dietary Preference</label>
+          <select name="tag2">
+            <option value="">Select</option>
+            <option value="Halal">Halal</option>
+            <option value="Kosher">Kosher</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Dairy Free">Dairy Free</option>
+            <option value="Gluten Free">Gluten Free</option>
+          </select>
+
+          <label>Extra Tag</label>
+          <select name="tag3">
+            <option value="">Select</option>
+            <option value="Low Cost">Low Cost</option>
+            <option value="Quick">Quick</option>
+            <option value="Simple">Simple</option>
+            <option value="Beginner Friendly">Beginner Friendly</option>
+          </select>
+
+          <!-- Nutrition -->
+          <h3>Nutrition</h3>
+          <label>Serving Size</label>
+          <input type="text" name="servingSize" placeholder="e.g. 1 plate (about 150g)" />
+
+          <label>Calories</label>
+          <input type="number" name="calories" placeholder="e.g. 400" />
+
+          <label>Fat</label>
+          <div class="nutrition-row">
+            <input type="number" name="fatValue" placeholder="e.g. 18" />
+            <select name="fatUnit">
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+            </select>
+          </div>
+
+          <label>Carbs</label>
+          <div class="nutrition-row">
+            <input type="number" name="carbsValue" placeholder="e.g. 50" />
+            <select name="carbsUnit">
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+            </select>
+          </div>
+
+          <label>Protein</label>
+          <div class="nutrition-row">
+            <input type="number" name="proteinValue" placeholder="e.g. 6" />
+            <select name="proteinUnit">
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+            </select>
+          </div>
+
+          <label>Sodium</label>
+          <div class="nutrition-row">
+            <input type="number" name="sodiumValue" placeholder="e.g. 200" />
+            <select name="sodiumUnit">
+              <option value="mg">mg</option>
+              <option value="g">g</option>
+            </select>
+          </div>
+
+          <label>Fiber</label>
+          <div class="nutrition-row">
+            <input type="number" name="fiberValue" placeholder="e.g. 2" />
+            <select name="fiberUnit">
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+            </select>
+          </div>
+
+          <label>Sugars</label>
+          <div class="nutrition-row">
+            <input type="number" name="sugarsValue" placeholder="e.g. 30" />
+            <select name="sugarsUnit">
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+            </select>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="submit-recipe-btn">Submit</button>
+        </form>
       </div>
     </div>
-  </main>
 
-  <div id="addRecipeOverlay" class="overlay" onclick="closeAddRecipeForm()">
-    <div class="popup-content" onclick="event.stopPropagation();">
-      <button class="close-popup-btn" onclick="closeAddRecipeForm()">X</button>
-  
-      <h2>Add a New Recipe</h2>
-  
-      <form id="addRecipeForm" onsubmit="handleAddRecipeSubmit(event)">
-
-        <!-- Basic Info -->
-        <label>Recipe Name</label>
-        <input type="text" name="recipeName" required />
-      
-        <label>Time (minutes)</label>
-        <input type="number" name="length" required />
-      
-        <label>Feeds (number)</label>
-        <input type="number" name="feeds" required />
-      
-        <label>Difficulty</label>
-        <select name="difficulty">
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-          <option value="Hard">Hard</option>
-        </select>
-      
-        <!-- Ingredients -->
-        <label>Ingredients</label>
-        <div id="ingredientsContainer" class="dynamic-field-group">
-          <!-- Ingredient rows go here -->
-        </div>
-        <button type="button" onclick="addIngredientRow()">+ Add Ingredient</button>
-
-        <!-- Instructions -->
-        <label>Instructions</label>
-        <div id="instructionsContainer" class="dynamic-field-group">
-          <!-- Instruction rows go here -->
-        </div>
-        <button type="button" onclick="addInstructionRow()">+ Add Step</button>
-      
-        <!-- Tags (up to 3) -->
-        <label>Meal Type</label>
-        <select name="tag1">
-          <option value="">Select</option>
-          <option value="Lunch">Lunch</option>
-          <option value="Dinner">Dinner</option>
-          <option value="Breakfast">Breakfast</option>
-          <option value="Dessert">Dessert</option>
-          <option value="Snack">Snack</option>
-        </select>
-        
-        <label>Dietary Preference</label>
-        <select name="tag2">
-          <option value="">Select</option>
-          <option value="Halal">Halal</option>
-          <option value="Kosher">Kosher</option>
-          <option value="Vegan">Vegan</option>
-          <option value="Vegetarian">Vegetarian</option>
-          <option value="Dairy Free">Dairy Free</option>
-          <option value="Gluten Free">Gluten Free</option>
-        </select>
-        
-        <label>Extra Tag</label>
-        <select name="tag3">
-          <option value="">Select</option>
-          <option value="Low Cost">Low Cost</option>
-          <option value="Quick">Quick</option>
-          <option value="Simple">Simple</option>
-          <option value="Beginner Friendly">Beginner Friendly</option>
-        </select>
-        
-      
-        <!-- Nutrition -->
-        <h3>Nutrition</h3>
-      
-        <label>Serving Size</label>
-        <input type="text" name="servingSize" placeholder="e.g. 1 plate (about 150g)" />
-      
-        <label>Calories</label>
-        <input type="number" name="calories" placeholder="e.g. 400" />
-      
-        <label>Fat</label>
-        <div class="nutrition-row">
-          <input type="number" name="fatValue" placeholder="e.g. 18" />
-          <select name="fatUnit">
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-          </select>
-        </div>
-      
-        <label>Carbs</label>
-        <div class="nutrition-row">
-          <input type="number" name="carbsValue" placeholder="e.g. 50" />
-          <select name="carbsUnit">
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-          </select>
-        </div>
-      
-        <label>Protein</label>
-        <div class="nutrition-row">
-          <input type="number" name="proteinValue" placeholder="e.g. 6" />
-          <select name="proteinUnit">
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-          </select>
-        </div>
-      
-        <label>Sodium</label>
-        <div class="nutrition-row">
-          <input type="number" name="sodiumValue" placeholder="e.g. 200" />
-          <select name="sodiumUnit">
-            <option value="mg">mg</option>
-            <option value="g">g</option>
-          </select>
-        </div>
-      
-        <label>Fiber</label>
-        <div class="nutrition-row">
-          <input type="number" name="fiberValue" placeholder="e.g. 2" />
-          <select name="fiberUnit">
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-          </select>
-        </div>
-      
-        <label>Sugars</label>
-        <div class="nutrition-row">
-          <input type="number" name="sugarsValue" placeholder="e.g. 30" />
-          <select name="sugarsUnit">
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-          </select>
-        </div>
-      
-        <!-- Submit -->
-        <button type="submit" class="submit-recipe-btn">Submit</button>
-      </form>
-    </div>
+    <!-- Bottom Navigation (App Navbar) -->
+    <nav class="app-navbar">
+      <a href="shoppinglist.html" title="Shopping List">
+        <img src="icons/shoppinglist.svg" alt="Shopping List" />
+      </a>
+      <a href="kitchen.html" title="Kitchen">
+        <img src="icons/kitchen.svg" alt="Kitchen" />
+      </a>
+      <a href="recipes.html" title="Recipes">
+        <img src="icons/recipes.svg" alt="Recipes" />
+      </a>
+      <a href="profile.html" title="Profile">
+        <img src="icons/profile.svg" alt="Profile" />
+      </a>
+    </nav>
   </div>
 
-  <!-- Bottom Navigation (PLACEHOLDER) -->
-  <nav class="app-navbar">
-    <a href="shoppinglist.html" title="Shopping List">
-      <img src="icons/shoppinglist.svg" alt="Shopping List" />
-    </a>
-    <a href="kitchen.html" title="Kitchen">
-      <img src="icons/kitchen.svg" alt="Kitchen" />
-    </a>
-    <a href="recipes.html" title="Recipes">
-      <img src="icons/recipes.svg" alt="Recipes" />
-    </a>
-    <a href="profile.html" title="Profile">
-      <img src="icons/profile.svg" alt="Profile" />
-    </a>
-  </nav>
-</div>
-
+  <!-- Scripts -->
   <script src="script/script.js"></script>
-
-  
 </body>
 </html>
+

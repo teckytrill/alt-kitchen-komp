@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load data from both JSONs
   Promise.all([
-    fetch('data/recipeCollections.json').then(r => r.json()),
+    fetch('data/recipeCollection.json').then(r => r.json()),
     fetch('data/recipes.json').then(r => r.json())
   ])
   .then(([collectionsData, recipesData]) => {

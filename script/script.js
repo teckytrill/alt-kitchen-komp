@@ -82,14 +82,10 @@ function loadRecipesData() {
         const storedLocalUser = localStorage.getItem('localUserRecipes');
         if (storedLocalUser) {
           try {
-            const localList = JSON.parse(storedLocalUser);
-            if (!allData.userRecipes) {
-              allData.userRecipes = [];
-            }
-            // Merge local user recipes into allData
-            localList.forEach(r => allData.userRecipes.push(r));
+            allData.userRecipes = JSON.parse(storedLocalUser);
           } catch(e) {
             console.error("Error parsing local user recipes from storage:", e);
+            allData.userRecipes = []; // fallback to empty if something's wrong
           }
         }
   
@@ -120,7 +116,7 @@ function loadRecipesData() {
     // e.g. renderBrowseCollections(allData.collections);
   
     // Or if you are fetching recipeCollections.json, do:
-    fetch('data/recipeCollections.json')
+    fetch('data/recipeCollection.json')
       .then(res => res.json())
       .then(collectionData => {
         const collections = collectionData.collections || [];
@@ -196,7 +192,7 @@ function loadRecipesData() {
     // Image
     const img = document.createElement('img');
     img.classList.add('recipe-image');
-    img.src = `images/${recipe.picture}`;
+    img.src = `icons/${recipe.picture}`;
     img.alt = recipe.name;
     card.appendChild(img);
   

@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="collectionDetail.css"/>
 </head>
 
+
 <style>
+
+
   body {
     font-family: Arial, sans-serif;
     background-color: #F7F5EE;
@@ -125,27 +128,68 @@
     cursor: pointer;
   }
   
-</style>
+      /* iPad Frame & Camera */
+    .ipad-frame {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background-color: #F7F5EE; /* iPad background color */
+    }
+
+    .ipad-camera {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      background-color: #000;   /* black "camera" */
+      border-radius: 50%;
+      /* Adjust to your taste, can be smaller or bigger */
+    }
+    </style>
+
+
 <body>
-  <!-- A simple header with a back button -->
-  <header class="collection-header">
-    <button class="back-button" onclick="goBack()">←</button>
-    <h1 id="collectionTitle">Collection</h1>
-  </header>
+  <div class="ipad-frame">
+    <!-- Simulated camera / notch -->
+    <div class="ipad-camera"></div>
 
-  <!-- Container for the narrower recipe cards -->
-  <main id="collectionRecipesContainer" class="collection-recipes">
-    <!-- Dynamically populated via JS -->
-  </main>
+    <!-- Top header (back arrow + collection title) -->
+    <header class="collection-header">
+      <button class="back-button" onclick="goBack()">←</button>
+      <h1 id="collectionTitle">Collection</h1>
+    </header>
 
+    <!-- Main content area with the narrower recipe cards -->
+    <main id="collectionRecipesContainer" class="collection-recipes">
+      <!-- Dynamically populated via JS -->
+    </main>
 
-  <!-- Optional Tag Popup Overlay -->
-  <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
-    <div class="popup-content" onclick="event.stopPropagation();">
-      <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
-      <h2 id="popupTagTitle">Tag:</h2>
-      <button class="close-btn" onclick="closeTagPopup()">Close</button>
+    <!-- Tag Popup Overlay -->
+    <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+      <div class="popup-content" onclick="event.stopPropagation();">
+        <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
+        <h2 id="popupTagTitle">Tag:</h2>
+        <button class="close-btn" onclick="closeTagPopup()">Close</button>
+      </div>
     </div>
+
+    <!-- Bottom Nav -->
+    <nav class="app-navbar">
+      <a href="shoppinglist.html" title="Shopping List">
+        <img src="icons/shoppinglist.svg" alt="Shopping List" />
+      </a>
+      <a href="kitchen.html" title="Kitchen">
+        <img src="icons/kitchen.svg" alt="Kitchen" />
+      </a>
+      <a href="recipes.html" title="Recipes">
+        <img src="icons/recipes.svg" alt="Recipes" />
+      </a>
+      <a href="profile.html" title="Profile">
+        <img src="icons/profile.svg" alt="Profile" />
+      </a>
+    </nav>
   </div>
 
   <script src="script/collectionDetail.js"></script>
