@@ -4,32 +4,12 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Recipes</title>
-  <link rel="stylesheet" href="/styles/main.css"/>
+  <link rel="stylesheet" href="style/main.css"/>
 </head>
 
   <style>
   /* Global Resets & Body */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    background-color: #F7F5EE; /* Light cream */
-    font-family: Arial, sans-serif;
-    color: #333;
-    padding-bottom: 60px; /* space for bottom nav */
-  }
 
-  /* Header */
-  .app-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #FFF;
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
-  }
   .logo-letter {
     font-size: 1.5rem;
     font-weight: bold;
@@ -41,6 +21,11 @@
     font-size: 1.25rem;
     color: #A35C43;
   }
+  main {
+    flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; 
+}
   .recipe-finder-tab {
     display: flex;
     align-items: center;
@@ -76,10 +61,6 @@
     cursor: pointer;
   }
 
-  /* Main Content */
-  main {
-    padding: 1rem;
-  }
 
   /* Section Headers */
   .section-header {
@@ -192,24 +173,6 @@
     padding: 0.5rem;
   }
 
-  /* Bottom Nav */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: #FFF;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid #ddd;
-    padding: 0.5rem 0;
-  }
-  .nav-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
   /* TAG POPUP OVERLAY */
   .overlay {
     position: fixed;
@@ -339,6 +302,7 @@
       font-size: 0.75rem;
       font-weight: bold;
       cursor: pointer;
+    }
 
       .popup-content form {
     display: flex;
@@ -408,8 +372,7 @@
     .ingredient-row input {
       flex: 1;
     }
-
-  }
+    
 
   </style>
 <!DOCTYPE html>
@@ -464,61 +427,63 @@
     </section>
 
     <main>
-      <!-- Browse Recipes -->
-      <section class="browse-section">
-        <div class="section-header">
-          <h2>Browse Recipes</h2>
-          <button class="view-all-btn">View All ►</button>
-        </div>
-        <div class="horizontal-scroll" id="browseCollectionsContainer">
-          <!-- Dynamically populated by script.js -->
-        </div>
-      </section>
+    <div class="scrollable-content">
+        <!-- Browse Recipes -->
+        <section class="browse-section">
+            <div class="section-header">
+            <h2>Browse Recipes</h2>
+            <button class="view-all-btn">View All ►</button>
+            </div>
+            <div class="horizontal-scroll" id="browseCollectionsContainer">
+            <!-- Dynamically populated by script.js -->
+            </div>
+        </section>
 
-      <!-- Saved Recipes -->
-      <section class="saved-section">
-        <div class="section-header">
-          <h2>Saved Recipes</h2>
-          <button class="view-all-btn">View All ►</button>
-        </div>
-        <div class="horizontal-scroll saved-recipes-container">
-          <!-- Dynamically populated by script.js -->
-        </div>
-      </section>
+        <!-- Saved Recipes -->
+        <section class="saved-section">
+            <div class="section-header">
+            <h2>Saved Recipes</h2>
+            <button class="view-all-btn">View All ►</button>
+            </div>
+            <div class="horizontal-scroll saved-recipes-container">
+            <!-- Dynamically populated by script.js -->
+            </div>
+        </section>
 
-      <!-- Recently Viewed Recipes -->
-      <section class="recently-viewed-section">
-        <div class="section-header">
-          <h2>Recently Viewed Recipes</h2>
-          <button class="view-all-btn">View All ►</button>
-        </div>
-        <div class="horizontal-scroll recently-viewed-container">
-          <!-- Dynamically populated by script.js -->
-        </div>
-      </section>
+        <!-- Recently Viewed Recipes -->
+        <section class="recently-viewed-section">
+            <div class="section-header">
+            <h2>Recently Viewed Recipes</h2>
+            <button class="view-all-btn">View All ►</button>
+            </div>
+            <div class="horizontal-scroll recently-viewed-container">
+            <!-- Dynamically populated by script.js -->
+            </div>
+        </section>
 
-      <!-- My Recipes -->
-      <section class="my-recipes-section">
-        <div class="section-header">
-          <h2>My Recipes</h2>
-          <button class="view-all-btn">View All ►</button>
-        </div>
-        <div class="horizontal-scroll my-recipes-container">
-          <!-- Dynamically populated by script.js -->
-        </div>
-      </section>
+        <!-- My Recipes -->
+        <section class="my-recipes-section">
+            <div class="section-header">
+            <h2>My Recipes</h2>
+            <button class="view-all-btn">View All ►</button>
+            </div>
+            <div class="horizontal-scroll my-recipes-container">
+            <!-- Dynamically populated by script.js -->
+            </div>
+        </section>
 
-      <!-- Floating + Button for Add Recipe -->
-      <button class="floating-add-btn" onclick="showAddRecipeForm()">+</button>
+        <!-- Floating + Button for Add Recipe -->
+        <button class="floating-add-btn" onclick="showAddRecipeForm()">+</button>
 
-      <!-- Tag Popup Overlay -->
-      <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
-        <div class="popup-content" onclick="event.stopPropagation();">
-          <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
-          <h2 id="popupTagTitle">Tag</h2>
-          <button class="close-btn" onclick="closeTagPopup()">Close</button>
+        <!-- Tag Popup Overlay -->
+        <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+            <div class="popup-content" onclick="event.stopPropagation();">
+            <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
+            <h2 id="popupTagTitle">Tag</h2>
+            <button class="close-btn" onclick="closeTagPopup()">Close</button>
+            </div>
         </div>
-      </div>
+    </div>
     </main>
 
     <!-- Filter Overlay -->

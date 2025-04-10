@@ -14,7 +14,12 @@
       "main": {
         "id": 1,
         "name": "Weekly Groceries",
-        "ingredients": []
+        "ingredients": [
+          {
+            "name": "Milk",
+            "quantity": "2 pcs"
+          }
+        ]
       }
     },
     "archived_lists": [
@@ -60,6 +65,18 @@
       {
         "name": "icecream",
         "quantity": "4 cups"
+      },
+      {
+        "name": "Milk",
+        "quantity": "2 pcs"
+      },
+      {
+        "name": "eggs",
+        "quantity": "1111 pcs"
+      },
+      {
+        "name": "Waffles",
+        "quantity": "1 pcs"
       }
     ],
     "favorite_ingredients": [
