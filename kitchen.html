@@ -8,9 +8,11 @@
 </head>
 <body>
   <div class="ipad-frame">
+    <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
     <div class="ipad-camera"></div>
 
-    <header class="app-header">🍳 Kitchen Kompanion</header>
+    <header class="app-header">K</header>
+
 
     <main class="app-content">
       <h2>🥫 Kitchen Inventory</h2>
@@ -49,8 +51,11 @@
       <a href="profile.html"><img src="icons/profile.svg" alt="Profile" /></a>
     </nav>
   </div>
+  
+  <!--
 
   <script>
+  
     const form = document.getElementById('inventory-form');
     const inventoryList = document.getElementById('inventory-list');
     const locationButtons = document.querySelectorAll('.location-btn');
@@ -125,9 +130,84 @@ let inventory = JSON.parse(localStorage.getItem(`kitchenInventory_${user}`)) || 
     function updateInventoryStorage() {
   localStorage.setItem(`kitchenInventory_${user}`, JSON.stringify(inventory));
 }
-
+function logoutUser() {
+    localStorage.removeItem("activeUser");
+    window.location.href = "login.html";
+  }
 
     renderInventory(); // Initial
   </script>
+-->
+
+<script>
+  const form = document.getElementById('inventory-form');
+  const inventoryList = document.getElementById('inventory-list');
+  const locationButtons = document.querySelectorAll('.location-btn');
+
+  const user = localStorage.getItem("activeUser");
+  if (!user) {
+    alert("You must log in first.");
+    window.location.href = "login.html";
+  }
+
+  let inventory = JSON.parse(localStorage.getItem(`kitchenInventory_${user}`)) || [];
+  let currentLocation = 'Fridge';
+
+  locationButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      locationButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentLocation = btn.dataset.location;
+      renderInventory();
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('item-name').value.trim();
+    const qty = document.getElementById('item-qty').value;
+    const unit = document.getElementById('item-unit').value;
+
+    if (!name) return;
+
+    inventory.push({ name, qty, unit, location: currentLocation });
+    updateInventoryStorage();
+    form.reset();
+    renderInventory();
+  });
+
+  function renderInventory() {
+    inventoryList.innerHTML = '';
+    const filtered = inventory
+      .map((item, index) => ({ ...item, index }))
+      .filter(item => item.location === currentLocation);
+
+    filtered.forEach(({ name, qty, unit, index }) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>${qty} ${unit} — ${name}</span>
+        <button onclick="removeItem(${index})">🗑</button>
+      `;
+      inventoryList.appendChild(li);
+    });
+  }
+
+  function removeItem(index) {
+    inventory.splice(index, 1);
+    updateInventoryStorage();
+    renderInventory();
+  }
+
+  function updateInventoryStorage() {
+    localStorage.setItem(`kitchenInventory_${user}`, JSON.stringify(inventory));
+  }
+
+  function logoutUser() {
+    localStorage.removeItem("activeUser");
+    window.location.href = "login.html";
+  }
+
+  renderInventory();
+</script>
 </body>
 </html>

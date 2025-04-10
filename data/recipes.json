@@ -1,0 +1,274 @@
+{
+    "savedRecipes": [
+      {
+        "name": "Chicken Caesar Salad",
+        "picture": "chicken_cesar_salad.png",
+        "length": 20,
+        "difficulty": "Easy",
+        "feeds": 2,
+        "ingredients": [
+          {
+            "quantity": "1",
+            "item": {
+              "name": "Romaine Lettuce",
+              "details": "chopped"
+            }
+          },
+          {
+            "quantity": "1",
+            "item": {
+              "name": "Chicken Breast",
+              "details": "grilled and sliced"
+            }
+          },
+          {
+            "quantity": "2 tbsp",
+            "item": {
+              "name": "Caesar Dressing"
+            }
+          },
+          {
+            "quantity": "As needed",
+            "item": {
+              "name": "Parmesan Cheese",
+              "details": "shredded"
+            }
+          },
+          {
+            "quantity": "Optional",
+            "item": {
+              "name": "Croutons"
+            }
+          }
+        ],
+        "steps": [
+          "Wash and chop the romaine lettuce.",
+          "Grill or pan-sear the chicken breast; slice into strips.",
+          "Place lettuce in a bowl, add chicken, Caesar dressing, cheese, and croutons if desired.",
+          "Toss well and serve immediately."
+        ],
+        "tags": [
+          "Salad",
+          "Lunch",
+          "Quick"
+        ],
+        "nutrition": {
+          "servingSize": "1 plate (about 150g)",
+          "calories": 400,
+          "fat": "18g",
+          "carbs": "50g",
+          "protein": "6g",
+          "sodium": "200mg",
+          "fiber": "2g",
+          "sugars": "30g"
+        }
+      },
+      {
+        "name": "Chocolate Mug Cake",
+        "picture": "chocolate_mug_cake.jpg",
+        "length": 5,
+        "difficulty": "Easy",
+        "feeds": 1,
+        "ingredients": [
+          {
+            "quantity": "4 tbsp",
+            "item": {
+              "name": "All-Purpose Flour"
+            }
+          },
+          {
+            "quantity": "4 tbsp",
+            "item": {
+              "name": "Sugar"
+            }
+          },
+          {
+            "quantity": "2 tbsp",
+            "item": {
+              "name": "Cocoa Powder"
+            }
+          },
+          {
+            "quantity": "1",
+            "item": {
+              "name": "Egg"
+            }
+          },
+          {
+            "quantity": "3 tbsp",
+            "item": {
+              "name": "Milk"
+            }
+          },
+          {
+            "quantity": "3 tbsp",
+            "item": {
+              "name": "Vegetable Oil"
+            }
+          },
+          {
+            "quantity": "Pinch",
+            "item": {
+              "name": "Salt"
+            }
+          }
+        ],
+        "steps": [
+          "Mix flour, sugar, cocoa powder, and salt in a microwave-safe mug.",
+          "Stir in egg, milk, and oil until smooth.",
+          "Microwave on high for about 90 seconds to 2 minutes.",
+          "Let it cool slightly before digging in."
+        ],
+        "tags": [
+          "Dessert",
+          "Quick",
+          "Chocolate"
+        ],
+        "nutrition": {
+          "servingSize": "1 mug (about 250g)",
+          "calories": 600,
+          "fat": "20g",
+          "carbs": "70g",
+          "protein": "25g",
+          "sodium": "800mg",
+          "fiber": "5g",
+          "sugars": "10g"
+        }
+      }
+    ],
+    "recentlyViewedRecipes": [
+      {
+        "name": "Spaghetti Bolognese",
+        "picture": "spaghetti_bolognese.jpg",
+        "length": 45,
+        "difficulty": "Medium",
+        "feeds": 4,
+        "ingredients": [
+          {
+            "quantity": "200g",
+            "item": {
+              "name": "Spaghetti"
+            }
+          },
+          {
+            "quantity": "1 lb",
+            "item": {
+              "name": "Ground Beef"
+            }
+          },
+          {
+            "quantity": "1 can",
+            "item": {
+              "name": "Tomato Sauce"
+            }
+          }
+        ],
+        "steps": [
+          "Cook spaghetti according to package instructions.",
+          "Brown the ground beef; drain excess fat.",
+          "Add tomato sauce and simmer. Combine with spaghetti.",
+          "Serve with grated cheese if desired."
+        ],
+        "tags": [
+          "Dinner",
+          "Pasta"
+        ],
+        "nutrition": {
+          "servingSize": "1 bowl (about 200g)",
+          "calories": 300,
+          "fat": "15g",
+          "carbs": "10g",
+          "protein": "25g",
+          "sodium": "400mg",
+          "fiber": "2g",
+          "sugars": "2g"
+        }
+      }
+    ],
+    "userRecipes": [
+      {
+        "name": "kjjkwc",
+        "length": 8,
+        "difficulty": "Easy",
+        "feeds": 8,
+        "ingredients": [
+          {
+            "quantity": "8",
+            "item": {
+              "name": "",
+              "details": ""
+            }
+          }
+        ],
+        "steps": [
+          "8"
+        ],
+        "tags": [
+          "8",
+          "8",
+          "8"
+        ],
+        "nutrition": {
+          "servingSize": "",
+          "calories": 8,
+          "fat": "8g",
+          "carbs": "8g",
+          "protein": "8g",
+          "sodium": "8mg",
+          "fiber": "8g",
+          "sugars": "8g"
+        }
+      },
+      {
+        "name": "Test",
+        "length": 60,
+        "difficulty": "Medium",
+        "feeds": 40,
+        "ingredients": [
+          {
+            "quantity": "Go",
+            "item": {
+              "name": "",
+              "details": ""
+            }
+          },
+          {
+            "quantity": "To",
+            "item": {
+              "name": "",
+              "details": ""
+            }
+          },
+          {
+            "quantity": "Sleep",
+            "item": {
+              "name": "",
+              "details": ""
+            }
+          }
+        ],
+        "steps": [
+          "I",
+          "AM",
+          "SO",
+          "FRICKIN",
+          "TIRED"
+        ],
+        "tags": [
+          "SALAD",
+          "LUNCH",
+          "YUMMY"
+        ],
+        "nutrition": {
+          "servingSize": "1 CUP",
+          "calories": 600,
+          "fat": "9g",
+          "carbs": "9g",
+          "protein": "10mg",
+          "sodium": "9mg",
+          "fiber": "2g",
+          "sugars": "11g"
+        }
+      }
+    ]
+  }

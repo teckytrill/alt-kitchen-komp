@@ -1,0 +1,46 @@
+{
+  "id": 1,
+  "username": "amman123",
+  "name": "Amman Vahora",
+  "dietary_preferences": ["Vegetarian"],
+  "allergies": ["Peanuts", "Shellfish"],
+  "shopping_lists": {
+    "main": {
+      "id": 1,
+      "name": "Weekly Groceries",
+      "ingredients": [
+        { "name": "Yogurt", "quantity": 2},
+        { "name": "Apple", "quantity": 4 },
+        { "name": "Flour", "quantity": 1 },
+        { "name": "Milk", "quantity": 2 },
+        { "name": "Eggs", "quantity": 12 },
+        { "name": "Apple Juice", "quantity": 1 },
+        { "name": "Syrup", "quantity": 1 },
+        { "name": "Carrots", "quantity": 5 },
+        { "name": "Red Meat", "quantity": 2 }
+      ]
+    }
+  },
+  "archived_lists": [
+    {
+      "id": 2,
+      "name": "Holiday Shopping",
+      "archived_at": "2025-03-15T18:00:00Z",
+      "ingredients": [
+        { "name": "Cranberries", "quantity": "cranberries.png" },
+        { "name": "Stuffing Mix", "quantity": 1 }
+      ]
+    }
+  ],
+  "pantry": [
+    { "name": "Eggs", "quantity": "3 packs", "storage": "Fridge" },
+    { "name": "Flour", "quantity": "1 bag", "storage": "Pantry" }
+  ],
+  "favorite_ingredients": [
+    { "name": "Carrots", "timestamp": "2025-03-30T12:34:56Z" },
+    { "name": "Flour", "timestamp": "2025-03-30T12:34:56Z" }
+  ],
+  "favorite_recipes": [
+    { "id": 101, "timestamp": "2025-03-28T09:45:30Z" }
+  ]
+}

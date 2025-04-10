@@ -1,0 +1,202 @@
+[
+    {
+      "id": 0,
+      "name": "Apple",
+      "image": "apple.png",
+      "category": "Fruit",
+      "nutritional_facts": {
+        "serving_size": { "value": 182, "unit": "g", "common_name": "Medium Apple" },
+        "calories": 52,
+        "total_fat": { "value": 0.4, "unit": "g", "percentage": 0.5 },
+        "trans_fat": { "value": 0, "unit": "g" },
+        "cholesterol": { "value": 0, "percentage": 0 },
+        "sodium": { "value": 1.8, "unit": "mg", "percentage": 0 },
+        "total_carbohydrates": { "value": 25, "unit": "g", "percentage": 9 },
+        "dietary_fiber": { "value": 4.4, "unit": "g", "percentage": 16 },
+        "sugars": { "value": 19, "unit": "g" },
+        "protein": { "value": 0.5, "unit": "g" },
+        "minerals": {
+          "Calcium": { "value": 11, "unit": "mg", "percentage": 1 },
+          "Iron": { "value": 0.2, "unit": "mg", "percentage": 1 },
+          "Potassium": { "value": 195, "unit": "mg", "percentage": 4 }
+        },
+        "vitamins": {}
+      }
+    },
+    {
+      "id": 1,
+      "name": "Flour",
+      "image": "1_flour.png",
+      "category": "Baking & Grains",
+      "nutritional_facts": {
+        "serving_size": { "value": 100, "unit": "g", "common_name": "1 cup" },
+        "calories": 364,
+        "total_fat": { "value": 1, "unit": "g", "percentage": 1 },
+        "trans_fat": { "value": 0, "unit": "g" },
+        "cholesterol": { "value": 0, "percentage": 0 },
+        "sodium": { "value": 2, "unit": "mg", "percentage": 0 },
+        "total_carbohydrates": { "value": 76, "unit": "g", "percentage": 25 },
+        "dietary_fiber": { "value": 2, "unit": "g", "percentage": 8 },
+        "sugars": { "value": 0, "unit": "g" },
+        "protein": { "value": 10, "unit": "g" },
+        "minerals": {
+          "Iron": { "value": 3, "unit": "mg", "percentage": 17 },
+          "Calcium": { "value": 15, "unit": "mg", "percentage": 1 }
+        },
+        "vitamins": {}
+      }
+    },
+    {
+      "id": 2,
+      "name": "Milk",
+      "image": "milk.png",
+      "category": "Dairy",
+      "nutritional_facts": {
+        "serving_size": { "value": 240, "unit": "ml", "common_name": "1 cup" },
+        "calories": 103,
+        "total_fat": { "value": 2.4, "unit": "g", "percentage": 3 },
+        "trans_fat": { "value": 0, "unit": "g" },
+        "cholesterol": { "value": 12, "unit": "mg", "percentage": 4 },
+        "sodium": { "value": 98, "unit": "mg", "percentage": 4 },
+        "total_carbohydrates": { "value": 12, "unit": "g", "percentage": 4 },
+        "dietary_fiber": { "value": 0, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 12, "unit": "g" },
+        "protein": { "value": 8, "unit": "g" },
+        "minerals": {
+          "Calcium": { "value": 305, "unit": "mg", "percentage": 31 },
+          "Potassium": { "value": 366, "unit": "mg", "percentage": 10 }
+        },
+        "vitamins": {
+          "Vitamin D": { "value": 120, "unit": "IU", "percentage": 15 },
+          "Vitamin B12": { "value": 1.3, "unit": "mcg", "percentage": 54 }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Eggs",
+      "image": "eggs.png",
+      "category": "Protein",
+      "nutritional_facts": {
+        "serving_size": { "value": 50, "unit": "g", "common_name": "1 large egg" },
+        "calories": 70,
+        "total_fat": { "value": 5, "unit": "g", "percentage": 8 },
+        "trans_fat": { "value": 0, "unit": "g" },
+        "cholesterol": { "value": 186, "unit": "mg", "percentage": 62 },
+        "sodium": { "value": 70, "unit": "mg", "percentage": 3 },
+        "total_carbohydrates": { "value": 1, "unit": "g", "percentage": 0 },
+        "dietary_fiber": { "value": 0, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 1, "unit": "g" },
+        "protein": { "value": 6, "unit": "g" },
+        "minerals": {
+          "Iron": { "value": 1, "unit": "mg", "percentage": 6 },
+          "Calcium": { "value": 28, "unit": "mg", "percentage": 2 }
+        },
+        "vitamins": {
+          "Vitamin D": { "value": 40, "unit": "IU", "percentage": 5 },
+          "Vitamin A": { "value": 270, "unit": "IU", "percentage": 5 }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Apple Juice",
+      "image": "apple_juice.png",
+      "category": "Beverages",
+      "nutritional_facts": {
+        "serving_size": { "value": 240, "unit": "ml", "common_name": "1 cup" },
+        "calories": 114,
+        "total_fat": { "value": 0.3, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 24, "unit": "g" },
+        "protein": { "value": 0.1, "unit": "g" },
+        "sodium": { "value": 10, "unit": "mg", "percentage": 0 }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Syrup",
+      "image": "syrup.png",
+      "category": "Condiments",
+      "nutritional_facts": {
+        "serving_size": { "value": 60, "unit": "ml", "common_name": "1/4 cup" },
+        "calories": 210,
+        "total_fat": { "value": 0, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 53, "unit": "g" },
+        "protein": { "value": 0, "unit": "g" }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Carrots",
+      "image": "carrots.png",
+      "category": "Vegetables",
+      "nutritional_facts": {
+        "serving_size": { "value": 61, "unit": "g", "common_name": "1 medium carrot" },
+        "calories": 25,
+        "total_fat": { "value": 0.1, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 3, "unit": "g" },
+        "protein": { "value": 0.6, "unit": "g" },
+        "vitamins": {
+          "Vitamin A": { "value": 509, "unit": "mcg", "percentage": 57 }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Red Meat",
+      "image": "redmeat.png",
+      "category": "Meat",
+      "nutritional_facts": {
+        "serving_size": { "value": 85, "unit": "g", "common_name": "3 oz" },
+        "calories": 250,
+        "total_fat": { "value": 20, "unit": "g", "percentage": 31 },
+        "protein": { "value": 22, "unit": "g" },
+        "cholesterol": { "value": 75, "unit": "mg", "percentage": 25 }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Cranberries",
+      "image": "cranberries.png",
+      "category": "Fruit",
+      "nutritional_facts": {
+        "serving_size": { "value": 110, "unit": "g", "common_name": "1 cup" },
+        "calories": 46,
+        "total_fat": { "value": 0.1, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 4, "unit": "g" },
+        "protein": { "value": 0.4, "unit": "g" },
+        "vitamins": {
+          "Vitamin C": { "value": 14, "unit": "mg", "percentage": 23 }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Stuffing Mix",
+      "image": "stuffing_mix.png",
+      "category": "Baking & Grains",
+      "nutritional_facts": {
+        "serving_size": { "value": 28, "unit": "g", "common_name": "1 oz dry mix" },
+        "calories": 130,
+        "total_fat": { "value": 1.5, "unit": "g", "percentage": 2 },
+        "sodium": { "value": 400, "unit": "mg", "percentage": 17 },
+        "carbohydrates": { "value": 24, "unit": "g", "percentage": 8 },
+        "protein": { "value": 3, "unit": "g" }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Yogurt",
+      "image": "yogurt.png",
+      "category": "Dairy",
+      "nutritional_facts": {
+        "serving_size": { "value": 150, "unit": "g", "common_name": "1 container" },
+        "calories": 100,
+        "protein": { "value": 10, "unit": "g" },
+        "total_fat": { "value": 0, "unit": "g", "percentage": 0 },
+        "sugars": { "value": 7, "unit": "g" },
+        "calcium": { "value": 150, "unit": "mg", "percentage": 15 }
+      }
+    }
+  ]
+  

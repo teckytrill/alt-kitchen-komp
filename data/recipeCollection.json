@@ -1,0 +1,24 @@
+{
+  "collections": [
+    {
+      "title": "Recipes for Griffin",
+      "recipeNames": [
+        "Chicken Caesar Salad",
+        "Chocolate Mug Cake"
+      ]
+    },
+    {
+      "title": "Healthy Recipes",
+      "recipeNames": [
+        "Chicken Caesar Salad"
+      ]
+    },
+    {
+      "title": "Popular Recipes",
+      "recipeNames": [
+        "Spaghetti Bolognese",
+        "Chicken Caesar Salad"
+      ]
+    }
+  ]
+}
