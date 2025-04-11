@@ -73,14 +73,12 @@ body {
   min-height: 100vh;
 }
 
-/* Simulated iPad frame */
-/* Simulated iPad frame */
 .ipad-frame {
   width: 640px;
   height: 800px;
   background: white;
   border-radius: 40px;
-  border: 16px solid #1f1f1f; /* dark iPad bezel */
+  border: 16px solid #1f1f1f; 
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
@@ -88,7 +86,6 @@ body {
   flex-direction: column;
 }
 
-/* Simulated front camera or notch */
 .ipad-camera {
   width: 60px;
   height: 6px;
@@ -101,7 +98,6 @@ body {
   z-index: 10;
 }
 
-/* Header */
 .app-header {
   display: flex;
 width: 75px;
@@ -117,14 +113,13 @@ font-weight: 400;
 line-height: normal;
 }
 
-/* Main content */
 .app-content {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
-/* Bottom nav */
+
 .app-navbar {
   height: 70px;
   background-color: #fff;
@@ -295,12 +290,11 @@ display: block;
 }
 
 
-/*********** HEADERS ***********/
 .app-header {
   display: flex;
-  align-items: center; /* Vertically centers the elements */
-  justify-content: space-between; /* Space between "K" and "Shopping List" */
-  width: 100%; /* Make sure it takes the full width of the container */
+  align-items: center; 
+  justify-content: space-between; 
+  width: 100%;
   padding: 0px 0px;
   background: var(--white);
 }
@@ -311,7 +305,7 @@ display: block;
   font-size: 76px;
   font-weight: 400;
   line-height: normal;
-  margin: 0; /* Remove default margin */
+  margin: 0; 
 }
 
 .app-header h3 {
@@ -320,12 +314,29 @@ display: block;
   font-size: 28px;
   font-weight: 400;
   line-height: normal;
-  margin: 0; /* Remove default margin */
+  margin: 0; 
 }
 
 .header-content {
   display: flex;
-  align-items: center; /* Vertically centers "K" and "Shopping List" */
-  justify-content: flex-start; /* Aligns items to the left */
-  gap: 20px; /* Space between "K" and "Shopping List" */
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 20px; 
+}
+
+.continue-btn {
+  background-color: #B55136;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: 'Lexend', sans-serif;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.2s ease;
+}
+
+.continue-btn:hover {
+  background-color: #a0402b;
 }

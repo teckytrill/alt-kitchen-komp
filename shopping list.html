@@ -1,1247 +1,1173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping List App</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #f0f0f0;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            min-height: 100vh;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .logo {
-            width: 50px;
-            height: 50px;
-            background-color: #a85c44;
-            margin-right: 20px;
-            position: relative;
-        }
-        
-        .logo::before {
-            content: "";
-            position: absolute;
-            right: -10px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            background-color: #a85c44;
-            border-radius: 5px;
-        }
-        
-        .title {
-            color: #a85c44;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .button {
-            padding: 8px 16px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .button.archive {
-            background-color: #5c7064;
-            color: white;
-        }
-        
-        .button.new-list {
-            background-color: #5c7064;
-            color: white;
-        }
-        
-        .list-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .list-title {
-            font-size: 18px;
-            font-weight: bold;
-            flex-grow: 1;
-        }
-        
-        .edit-icon {
-            color: #5c7064;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        
-        .created-date {
-            background-color: #b6d5c8;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            margin: 0 auto;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-        
-        .search-bar {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 40px;
-            border-radius: 25px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 12px;
-            color: #888;
-        }
-        
-        .category-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .category {
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        
-        .category.pantry, .category.fridge, .category.freezer {
-            background-color: #b6d5c8;
-            color: #2c3e50;
-        }
-        
-        .category.fruits, .category.vegetables, .category.grains, .category.proteins, .category.dairy {
-            background-color: #5c7064;
-            color: white;
-        }
-        
-        .sort-by {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        
-        .sort-by select {
-            margin-left: 10px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        .ingredient-header {
-            background-color: #6a4caf;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: inline-block;
-        }
-        
-        .item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            background-color: white;
-        }
-        
-        .item-checkbox {
-            margin-right: 15px;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .item-color {
-            width: 50px;
-            height: 50px;
-            background-color: #a85c44;
-            border-radius: 5px;
-            margin-right: 15px;
-        }
-        
-        .item-details {
-            flex-grow: 1;
-        }
-        
-        .item-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .item-quantity {
-            background-color: #eee;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            display: inline-block;
-        }
-        
-        .quantity-edit {
-            margin-left: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            color: #5c7064;
-        }
-        
-        .item-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-icon {
-            cursor: pointer;
-            color: #888;
-        }
-        
-        .heart-icon {
-            color: #d9534f;
-        }
-        
-        .empty-list {
-            text-align: center;
-            padding: 50px 0;
-            color: #888;
-        }
-        
-        .hint {
-            text-align: center;
-            color: #5c7064;
-            margin-bottom: 10px;
-        }
-        
-        .arrow {
-            text-align: center;
-            color: #b6d5c8;
-            font-size: 30px;
-            margin-top: 20px;
-        }
-        
-        .add-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background-color: #b6d5c8;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            color: white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-        
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #eee;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #888;
-            cursor: pointer;
-        }
-        
-        .nav-icon {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .nav-text {
-            font-size: 12px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background-color: white;
-            width: 80%;
-            max-width: 500px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        
-        .modal-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .form-label {
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .form-input {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .modal-button {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .modal-button.cancel {
-            background-color: #eee;
-        }
-        
-        .modal-button.confirm {
-            background-color: #5c7064;
-            color: white;
-        }
-        
-        .checked {
-            text-decoration: line-through;
-            color: #888;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping List App</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background-color: #a85c44;
+    margin-right: 20px;
+    position: relative;
+}
+
+.logo::before {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: #a85c44;
+    border-radius: 5px;
+}
+
+.title {
+    color: #a85c44;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.button.archive {
+    background-color: #5c7064;
+    color: white;
+}
+
+.button.new-list {
+    background-color: #5c7064;
+    color: white;
+}
+
+.list-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.list-title {
+    font-size: 18px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.edit-icon {
+    color: #5c7064;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.created-date {
+    background-color: #b6d5c8;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    margin: 0 auto;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 40px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #888;
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category {
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.category.pantry, .category.fridge, .category.freezer {
+    background-color: #b6d5c8;
+    color: #2c3e50;
+}
+
+.category.fruits, .category.vegetables, .category.grains, .category.proteins, .category.dairy {
+    background-color: #5c7064;
+    color: white;
+}
+
+.sort-by {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.sort-by select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.ingredient-header {
+    background-color: #6a4caf;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.item-checkbox {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+}
+
+.item-color {
+    width: 50px;
+    height: 50px;
+    background-color: #a85c44;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.item-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-quantity {
+    background-color: #eee;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.quantity-edit {
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #5c7064;
+}
+
+.item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-icon {
+    cursor: pointer;
+    color: #888;
+}
+
+.heart-icon {
+    color: #d9534f;
+}
+
+.empty-list {
+    text-align: center;
+    padding: 50px 0;
+    color: #888;
+}
+
+.hint {
+    text-align: center;
+    color: #5c7064;
+    margin-bottom: 10px;
+}
+
+.arrow {
+    text-align: center;
+    color: #b6d5c8;
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.add-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #b6d5c8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #888;
+    cursor: pointer;
+}
+
+.nav-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.nav-text {
+    font-size: 12px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    width: 80%;
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-button.cancel {
+    background-color: #eee;
+}
+
+.modal-button.confirm {
+    background-color: #5c7064;
+    color: white;
+}
+
+.checked {
+    text-decoration: line-through;
+    color: #888;
+}
+</style>
 </head>
 
 
 <body>
-    <div class="container" id="main-container">
-        <div class="header">
-            <div class="logo"></div>
-            <div class="title">Shopping List</div>
-        </div>
-        
-        <div class="action-bar">
-            <button class="button archive" id="archived-lists-btn">Archived Lists</button>
-            <button class="button new-list" id="new-list-btn">+ New List</button>
-        </div>
-        
-        <div id="lists-container">
-            <!-- Lists will be dynamically added here -->
-        </div>
-        
-        <div class="add-button" id="add-item-btn">+</div>
-        
-        <div class="nav-bar">
-            <div class="nav-item">
-                <div class="nav-icon" style="color: #a85c44;">📋</div>
-                <div class="nav-text">Lists</div>
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">📊</div>
-                <div class="nav-text">Stats</div>
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">🍳</div>
-                <div class="nav-text">Recipes</div>
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">👤</div>
-                <div class="nav-text">Profile</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- New List Modal -->
-    <div class="modal" id="new-list-modal">
-        <div class="modal-content">
-            <div class="modal-header">Create New List</div>
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="form-label">List Name</label>
-                    <input type="text" class="form-input" id="new-list-name" placeholder="Enter list name">
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-button cancel" id="cancel-new-list">Cancel</button>
-                <button class="modal-button confirm" id="create-new-list">Create</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add Item Modal -->
-    <div class="modal" id="add-item-modal">
-        <div class="modal-content">
-            <div class="modal-header">Add Item</div>
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="form-label">Item Name</label>
-                    <input type="text" class="form-input" id="new-item-name" placeholder="Enter item name">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Quantity</label>
-                    <input type="text" class="form-input" id="new-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select class="form-input" id="new-item-category">
-                        <option value="fruits">Fruits</option>
-                        <option value="vegetables">Vegetables</option>
-                        <option value="grains">Grains & Cereals</option>
-                        <option value="proteins">Proteins</option>
-                        <option value="dairy">Dairy & Alternatives</option>
-                        <option value="pantry">Pantry</option>
-                        <option value="fridge">Fridge</option>
-                        <option value="freezer">Freezer</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-button cancel" id="cancel-add-item">Cancel</button>
-                <button class="modal-button confirm" id="confirm-add-item">Add</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Edit Item Modal -->
-    <div class="modal" id="edit-item-modal">
-        <div class="modal-content">
-            <div class="modal-header">Edit Item</div>
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="form-label">Item Name</label>
-                    <input type="text" class="form-input" id="edit-item-name" placeholder="Enter item name">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Quantity</label>
-                    <input type="text" class="form-input" id="edit-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select class="form-input" id="edit-item-category">
-                        <option value="fruits">Fruits</option>
-                        <option value="vegetables">Vegetables</option>
-                        <option value="grains">Grains & Cereals</option>
-                        <option value="proteins">Proteins</option>
-                        <option value="dairy">Dairy & Alternatives</option>
-                        <option value="pantry">Pantry</option>
-                        <option value="fridge">Fridge</option>
-                        <option value="freezer">Freezer</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-button cancel" id="cancel-edit-item">Cancel</button>
-                <button class="modal-button confirm" id="confirm-edit-item">Save</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Archived Lists View -->
-    <div class="container" id="archived-container" style="display: none;">
-        <div class="header">
-            <div class="logo"></div>
-            <div class="title">Archived Lists</div>
-        </div>
-        
-        <div class="action-bar">
-            <button class="button archive" id="back-to-lists">Back to Lists</button>
-        </div>
-        
-        <div id="archived-lists">
-            <!-- Archived lists will be displayed here -->
-        </div>
-    </div>
-    
-    <script>
-        // Data structure for shopping lists
-        let shoppingLists = [
-            {
-                id: 1,
-                name: "Griffin's Shopping List",
-                createdDate: "11/12/2024",
-                archived: false,
-                items: [
-                    { id: 1, name: "Apple", quantity: "6 Apples", category: "fruits", checked: false },
-                    { id: 2, name: "Vanilla Ice cream", quantity: "1 Pint", category: "dairy", checked: true },
-                    { id: 3, name: "Eggs", quantity: "2 Units", category: "proteins", checked: false },
-                    { id: 4, name: "Wheat Bread", quantity: "1 Unit", category: "grains", checked: false },
-                    { id: 5, name: "Broccoli", quantity: "1 Unit", category: "vegetables", checked: false }
-                ]
-            }
-        ];
-        
-        let archivedLists = [];
-        let currentListId = 1; // Default to first list
-        let itemIdCounter = 6; // Start from the next available ID
-        let listIdCounter = 2; // Start from the next available ID
-        
-        // DOM Elements
-        const mainContainer = document.getElementById('main-container');
-        const archivedContainer = document.getElementById('archived-container');
-        const listsContainer = document.getElementById('lists-container');
-        const archivedListsContainer = document.getElementById('archived-lists');
-        const archivedListsBtn = document.getElementById('archived-lists-btn');
-        const backToListsBtn = document.getElementById('back-to-lists');
-        const newListBtn = document.getElementById('new-list-btn');
-        const addItemBtn = document.getElementById('add-item-btn');
-        
-        // Modals
-        const newListModal = document.getElementById('new-list-modal');
-        const addItemModal = document.getElementById('add-item-modal');
-        const editItemModal = document.getElementById('edit-item-modal');
-        const cancelNewListBtn = document.getElementById('cancel-new-list');
-        const createNewListBtn = document.getElementById('create-new-list');
-        const cancelAddItemBtn = document.getElementById('cancel-add-item');
-        const confirmAddItemBtn = document.getElementById('confirm-add-item');
-        const cancelEditItemBtn = document.getElementById('cancel-edit-item');
-        const confirmEditItemBtn = document.getElementById('confirm-edit-item');
-        
-        // Initialize the app
-        function initApp() {
-            renderLists();
-            setupEventListeners();
-        }
-        
-        // Render shopping lists
-        function renderLists() {
-            listsContainer.innerHTML = '';
-    
-             // Filter active lists
-            const activeLists = shoppingLists.filter(list => !list.archived);
-    
-            if (activeLists.length === 0) {
-                renderEmptyListsState();
-                return;
-            }
-    
-    // Show list selector if there are multiple active lists
-    if (activeLists.length > 1) {
-        const listSelector = document.createElement('div');
-        listSelector.className = 'list-selector';
-        listSelector.innerHTML = `
-            <label for="list-select">Select List:</label>
-            <select id="list-select" onchange="switchList(this.value)">
-                ${activeLists.map(list => `
-                    <option value="${list.id}" ${list.id === currentListId ? 'selected' : ''}>
-                        ${list.name}
-                    </option>
-                `).join('')}
-            </select>
-        `;
-        listsContainer.appendChild(listSelector);
-    }
-    
-    // Render the current active list
-    const currentList = activeLists.find(list => list.id === currentListId);
-    if (currentList) {
-        renderActiveList(currentList);
-    } else if (activeLists.length > 0) {
-        // If current list is not found (maybe it was archived), use the first active list
-        currentListId = activeLists[0].id;
-        renderActiveList(activeLists[0]);
-    }
-}
-        
-        function switchList(listId) {
-            currentListId = parseInt(listId);
-            renderLists();
-        } 
+<div class="container" id="main-container">
+<div class="header">
+    <div class="logo"></div>
+    <div class="title">Shopping List</div>
+</div>
 
-        // Render archived lists
-        function renderArchivedLists() {
-            archivedListsContainer.innerHTML = '';
-            
-            // Filter archived lists
-            const archived = [...archivedLists, ...shoppingLists.filter(list => list.archived)];
-            
-            if (archived.length === 0) {
-                archivedListsContainer.innerHTML = `
-                    <div class="empty-list">
-                        <div class="hint">No archived lists yet</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            archived.forEach(list => {
-                const listElement = document.createElement('div');
-                listElement.className = 'list-header';
-                listElement.innerHTML = `
-                    <div class="list-title">${list.name}</div>
-                    <span>Created ${list.createdDate}</span>
-                    <button class="button" onclick="restoreList(${list.id})">Restore</button>
-                `;
-                archivedListsContainer.appendChild(listElement);
-            });
-        }
-        
-        // Render active list
-        function renderActiveList(list) {
-            // List header
-            const listHeader = document.createElement('div');
-            listHeader.className = 'list-header';
-            listHeader.innerHTML = `
-                <div class="list-title">${list.name}</div>
-                <div class="edit-icon" onclick="editListName(${list.id})">✏️</div>
-            `;
-            listsContainer.appendChild(listHeader);
-            
-            // Created date
-            const createdDate = document.createElement('div');
-            createdDate.className = 'created-date';
-            createdDate.textContent = `Created ${list.createdDate}`;
-            listsContainer.appendChild(createdDate);
-            
-            // Search bar
-            const searchBar = document.createElement('div');
-            searchBar.className = 'search-bar';
-            searchBar.innerHTML = `
-                <input type="text" id="search-input" placeholder="Search your Shopping List" oninput="searchItems()">
-                <span class="search-icon">🔍</span>
-            `;
-            listsContainer.appendChild(searchBar);
-            
-            // Category filters
-            const categoryFilters = document.createElement('div');
-            categoryFilters.className = 'category-filters';
-            categoryFilters.innerHTML = `
-                <div class="category pantry" onclick="filterByCategory('pantry')">Pantry</div>
-                <div class="category fridge" onclick="filterByCategory('fridge')">Fridge</div>
-                <div class="category freezer" onclick="filterByCategory('freezer')">Freezer</div>
-            `;
-            listsContainer.appendChild(categoryFilters);
-            
-            const categoryFilters2 = document.createElement('div');
-            categoryFilters2.className = 'category-filters';
-            categoryFilters2.innerHTML = `
-                <div class="category fruits" onclick="filterByCategory('fruits')">Fruits</div>
-                <div class="category vegetables" onclick="filterByCategory('vegetables')">Vegetables</div>
-                <div class="category grains" onclick="filterByCategory('grains')">Grains & Cereals</div>
-                <div class="category proteins" onclick="filterByCategory('proteins')">Proteins</div>
-                <div class="category dairy" onclick="filterByCategory('dairy')">Dairy & Alternatives</div>
-            `;
-            listsContainer.appendChild(categoryFilters2);
-            
-            // Sort by
-            const sortBy = document.createElement('div');
-            sortBy.className = 'sort-by';
-            sortBy.innerHTML = `
-                Sort By: 
-                <select onchange="sortItems(this.value)">
-                    <option value="az">A-Z</option>
-                    <option value="za">Z-A</option>
-                    <option value="category">Category</option>
-                </select>
-            `;
-            listsContainer.appendChild(sortBy);
-            
-            // Ingredient header
-            const ingredientHeader = document.createElement('div');
-            ingredientHeader.className = 'ingredient-header';
-            ingredientHeader.textContent = 'Ingredient';
-            listsContainer.appendChild(ingredientHeader);
-            
-            // Items
-            if (list.items.length === 0) {
-                renderEmptyItemsState();
-                return;
-            }
-            
-            list.items.forEach(item => {
-                renderItem(item);
-            });
-        }
-        
-        // Render single item
-        function renderItem(item) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-            itemElement.dataset.id = item.id;
-            itemElement.dataset.category = item.category;
-            
-            itemElement.innerHTML = `
-                <input type="checkbox" class="item-checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItemCheck(${item.id})">
-                <div class="item-color"></div>
-                <div class="item-details">
-                    <div class="item-name ${item.checked ? 'checked' : ''}">${item.name}</div>
-                    <div class="item-quantity">${item.quantity} <span class="quantity-edit" onclick="editItem(${item.id})">✏️</span></div>
-                </div>
-                <div class="item-actions">
-                    <span class="action-icon heart-icon" onclick="toggleFavorite(${item.id})">❤️</span>
-                    <span class="action-icon" onclick="duplicateItem(${item.id})">📋</span>
-                    <span class="action-icon" onclick="removeItem(${item.id})">🗑️</span>
-                </div>
-            `;
-            
-            listsContainer.appendChild(itemElement);
-        }
-        
-        // Render empty lists state
-        function renderEmptyListsState() {
-            listsContainer.innerHTML = `
-                <div class="empty-list">
-                    <div class="hint">You don't have any shopping lists yet</div>
-                    <div class="hint">Create a new list to get started</div>
-                    <div class="arrow">↓</div>
-                </div>
-            `;
-        }
-        
-        // Render empty items state
-        function renderEmptyItemsState() {
-            const emptyState = document.createElement('div');
-            emptyState.className = 'empty-list';
-            emptyState.innerHTML = `
-                <div class="hint">Add some ingredients to your shopping list.</div>
-                <div class="arrow">↓</div>
-            `;
-            listsContainer.appendChild(emptyState);
-        }
-        
-        // Event listeners
-        function setupEventListeners() {
-            // Navigation between views
-            archivedListsBtn.addEventListener('click', () => {
-                mainContainer.style.display = 'none';
-                archivedContainer.style.display = 'block';
-                renderArchivedLists();
-            });
-            
-            backToListsBtn.addEventListener('click', () => {
-                archivedContainer.style.display = 'none';
-                mainContainer.style.display = 'block';
-            });
-            
-            // New list modal
-            newListBtn.addEventListener('click', () => {
-                newListModal.style.display = 'block';
-            });
-            
-            cancelNewListBtn.addEventListener('click', () => {
-                newListModal.style.display = 'none';
-                document.getElementById('new-list-name').value = '';
-            });
-            
-            createNewListBtn.addEventListener('click', createNewList);
-            
-            // Add item modal
-            addItemBtn.addEventListener('click', () => {
-                addItemModal.style.display = 'block';
-            });
-            
-            cancelAddItemBtn.addEventListener('click', () => {
-                addItemModal.style.display = 'none';
-                resetAddItemForm();
-            });
-            
-            confirmAddItemBtn.addEventListener('click', addNewItem);
-            
-            // Edit item modal
-            cancelEditItemBtn.addEventListener('click', () => {
-                editItemModal.style.display = 'none';
-            });
-            
-            confirmEditItemBtn.addEventListener('click', updateItem);
-        }
-        
-        // Create new list
-   function createNewList() {
-    const listName = document.getElementById('new-list-name').value.trim();
+<div class="action-bar">
+    <button class="button archive" id="archived-lists-btn">Archived Lists</button>
+    <button class="button new-list" id="new-list-btn">+ New List</button>
+</div>
+
+<div id="lists-container">
+</div>
+
+<div class="add-button" id="add-item-btn">+</div>
+
+<div class="nav-bar">
+    <div class="nav-item">
+        <div class="nav-icon" style="color: #a85c44;">📋</div>
+        <div class="nav-text">Lists</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">📊</div>
+        <div class="nav-text">Stats</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">🍳</div>
+        <div class="nav-text">Recipes</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon">👤</div>
+        <div class="nav-text">Profile</div>
+    </div>
+</div>
+</div>
+<div class="modal" id="new-list-modal">
+<div class="modal-content">
+    <div class="modal-header">Create New List</div>
+    <div class="modal-form">
+        <div class="form-group">
+            <label class="form-label">List Name</label>
+            <input type="text" class="form-input" id="new-list-name" placeholder="Enter list name">
+        </div>
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-button cancel" id="cancel-new-list">Cancel</button>
+        <button class="modal-button confirm" id="create-new-list">Create</button>
+    </div>
+</div>
+</div>
+<div class="modal" id="add-item-modal">
+<div class="modal-content">
+    <div class="modal-header">Add Item</div>
+    <div class="modal-form">
+        <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" class="form-input" id="new-item-name" placeholder="Enter item name">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="text" class="form-input" id="new-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" id="new-item-category">
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="grains">Grains & Cereals</option>
+                <option value="proteins">Proteins</option>
+                <option value="dairy">Dairy & Alternatives</option>
+                <option value="pantry">Pantry</option>
+                <option value="fridge">Fridge</option>
+                <option value="freezer">Freezer</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-button cancel" id="cancel-add-item">Cancel</button>
+        <button class="modal-button confirm" id="confirm-add-item">Add</button>
+    </div>
+</div>
+</div>
+<div class="modal" id="edit-item-modal">
+<div class="modal-content">
+    <div class="modal-header">Edit Item</div>
+    <div class="modal-form">
+        <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" class="form-input" id="edit-item-name" placeholder="Enter item name">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="text" class="form-input" id="edit-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" id="edit-item-category">
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="grains">Grains & Cereals</option>
+                <option value="proteins">Proteins</option>
+                <option value="dairy">Dairy & Alternatives</option>
+                <option value="pantry">Pantry</option>
+                <option value="fridge">Fridge</option>
+                <option value="freezer">Freezer</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-button cancel" id="cancel-edit-item">Cancel</button>
+        <button class="modal-button confirm" id="confirm-edit-item">Save</button>
+    </div>
+</div>
+</div>
+<div class="container" id="archived-container" style="display: none;">
+<div class="header">
+    <div class="logo"></div>
+    <div class="title">Archived Lists</div>
+</div>
+
+<div class="action-bar">
+    <button class="button archive" id="back-to-lists">Back to Lists</button>
+</div>
+
+<div id="archived-lists">
+</div>
+</div>
+
+<script>
+let shoppingLists = [
+    {
+        id: 1,
+        name: "Griffin's Shopping List",
+        createdDate: "11/12/2024",
+        archived: false,
+        items: [
+            { id: 1, name: "Apple", quantity: "6 Apples", category: "fruits", checked: false },
+            { id: 2, name: "Vanilla Ice cream", quantity: "1 Pint", category: "dairy", checked: true },
+            { id: 3, name: "Eggs", quantity: "2 Units", category: "proteins", checked: false },
+            { id: 4, name: "Wheat Bread", quantity: "1 Unit", category: "grains", checked: false },
+            { id: 5, name: "Broccoli", quantity: "1 Unit", category: "vegetables", checked: false }
+        ]
+    }
+];
+
+let archivedLists = [];
+let currentListId = 1; 
+let itemIdCounter = 6; 
+let listIdCounter = 2; 
+
+const mainContainer = document.getElementById('main-container');
+const archivedContainer = document.getElementById('archived-container');
+const listsContainer = document.getElementById('lists-container');
+const archivedListsContainer = document.getElementById('archived-lists');
+const archivedListsBtn = document.getElementById('archived-lists-btn');
+const backToListsBtn = document.getElementById('back-to-lists');
+const newListBtn = document.getElementById('new-list-btn');
+const addItemBtn = document.getElementById('add-item-btn');
+
+
+const newListModal = document.getElementById('new-list-modal');
+const addItemModal = document.getElementById('add-item-modal');
+const editItemModal = document.getElementById('edit-item-modal');
+const cancelNewListBtn = document.getElementById('cancel-new-list');
+const createNewListBtn = document.getElementById('create-new-list');
+const cancelAddItemBtn = document.getElementById('cancel-add-item');
+const confirmAddItemBtn = document.getElementById('confirm-add-item');
+const cancelEditItemBtn = document.getElementById('cancel-edit-item');
+const confirmEditItemBtn = document.getElementById('confirm-edit-item');
+
+
+function initApp() {
+    renderLists();
+    setupEventListeners();
+}
+
+
+function renderLists() {
+    listsContainer.innerHTML = '';
+    const activeLists = shoppingLists.filter(list => !list.archived);
+
+    if (activeLists.length === 0) {
+        renderEmptyListsState();
+        return;
+    }
+
+if (activeLists.length > 1) {
+const listSelector = document.createElement('div');
+listSelector.className = 'list-selector';
+listSelector.innerHTML = `
+    <label for="list-select">Select List:</label>
+    <select id="list-select" onchange="switchList(this.value)">
+        ${activeLists.map(list => `
+            <option value="${list.id}" ${list.id === currentListId ? 'selected' : ''}>
+                ${list.name}
+            </option>
+        `).join('')}
+    </select>
+`;
+listsContainer.appendChild(listSelector);
+}
+const currentList = activeLists.find(list => list.id === currentListId);
+if (currentList) {
+renderActiveList(currentList);
+} else if (activeLists.length > 0) {
+currentListId = activeLists[0].id;
+renderActiveList(activeLists[0]);
+}
+}
+
+function switchList(listId) {
+    currentListId = parseInt(listId);
+    renderLists();
+} 
+
+function renderArchivedLists() {
+    archivedListsContainer.innerHTML = '';
     
-    if (!listName) {
-        alert('Please enter a list name');
+    const archived = [...archivedLists, ...shoppingLists.filter(list => list.archived)];
+    
+    if (archived.length === 0) {
+        archivedListsContainer.innerHTML = `
+            <div class="empty-list">
+                <div class="hint">No archived lists yet</div>
+            </div>
+        `;
         return;
     }
     
-    const newList = {
-        id: listIdCounter++,
-        name: listName,
-        createdDate: getCurrentDate(),
-        archived: false,
-        items: []
+    archived.forEach(list => {
+        const listElement = document.createElement('div');
+        listElement.className = 'list-header';
+        listElement.innerHTML = `
+            <div class="list-title">${list.name}</div>
+            <span>Created ${list.createdDate}</span>
+            <button class="button" onclick="restoreList(${list.id})">Restore</button>
+        `;
+        archivedListsContainer.appendChild(listElement);
+    });
+}
+
+function renderActiveList(list) {
+    const listHeader = document.createElement('div');
+    listHeader.className = 'list-header';
+    listHeader.innerHTML = `
+        <div class="list-title">${list.name}</div>
+        <div class="edit-icon" onclick="editListName(${list.id})">✏️</div>
+    `;
+    listsContainer.appendChild(listHeader);
+    
+
+    const createdDate = document.createElement('div');
+    createdDate.className = 'created-date';
+    createdDate.textContent = `Created ${list.createdDate}`;
+    listsContainer.appendChild(createdDate);
+    
+    const searchBar = document.createElement('div');
+    searchBar.className = 'search-bar';
+    searchBar.innerHTML = `
+        <input type="text" id="search-input" placeholder="Search your Shopping List" oninput="searchItems()">
+        <span class="search-icon">🔍</span>
+    `;
+    listsContainer.appendChild(searchBar);
+    
+    const categoryFilters = document.createElement('div');
+    categoryFilters.className = 'category-filters';
+    categoryFilters.innerHTML = `
+        <div class="category pantry" onclick="filterByCategory('pantry')">Pantry</div>
+        <div class="category fridge" onclick="filterByCategory('fridge')">Fridge</div>
+        <div class="category freezer" onclick="filterByCategory('freezer')">Freezer</div>
+    `;
+    listsContainer.appendChild(categoryFilters);
+    
+    const categoryFilters2 = document.createElement('div');
+    categoryFilters2.className = 'category-filters';
+    categoryFilters2.innerHTML = `
+        <div class="category fruits" onclick="filterByCategory('fruits')">Fruits</div>
+        <div class="category vegetables" onclick="filterByCategory('vegetables')">Vegetables</div>
+        <div class="category grains" onclick="filterByCategory('grains')">Grains & Cereals</div>
+        <div class="category proteins" onclick="filterByCategory('proteins')">Proteins</div>
+        <div class="category dairy" onclick="filterByCategory('dairy')">Dairy & Alternatives</div>
+    `;
+    listsContainer.appendChild(categoryFilters2);
+    
+    const sortBy = document.createElement('div');
+    sortBy.className = 'sort-by';
+    sortBy.innerHTML = `
+        Sort By: 
+        <select onchange="sortItems(this.value)">
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+            <option value="category">Category</option>
+        </select>
+    `;
+    listsContainer.appendChild(sortBy);
+    
+    const ingredientHeader = document.createElement('div');
+    ingredientHeader.className = 'ingredient-header';
+    ingredientHeader.textContent = 'Ingredient';
+    listsContainer.appendChild(ingredientHeader);
+    
+    if (list.items.length === 0) {
+        renderEmptyItemsState();
+        return;
+    }
+    
+    list.items.forEach(item => {
+        renderItem(item);
+    });
+}
+
+function renderItem(item) {
+    const itemElement = document.createElement('div');
+    itemElement.className = 'item';
+    itemElement.dataset.id = item.id;
+    itemElement.dataset.category = item.category;
+    
+    itemElement.innerHTML = `
+        <input type="checkbox" class="item-checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItemCheck(${item.id})">
+        <div class="item-color"></div>
+        <div class="item-details">
+            <div class="item-name ${item.checked ? 'checked' : ''}">${item.name}</div>
+            <div class="item-quantity">${item.quantity} <span class="quantity-edit" onclick="editItem(${item.id})">✏️</span></div>
+        </div>
+        <div class="item-actions">
+            <span class="action-icon heart-icon" onclick="toggleFavorite(${item.id})">❤️</span>
+            <span class="action-icon" onclick="duplicateItem(${item.id})">📋</span>
+            <span class="action-icon" onclick="removeItem(${item.id})">🗑️</span>
+        </div>
+    `;
+    
+    listsContainer.appendChild(itemElement);
+}
+
+function renderEmptyListsState() {
+    listsContainer.innerHTML = `
+        <div class="empty-list">
+            <div class="hint">You don't have any shopping lists yet</div>
+            <div class="hint">Create a new list to get started</div>
+            <div class="arrow">↓</div>
+        </div>
+    `;
+}
+
+function renderEmptyItemsState() {
+    const emptyState = document.createElement('div');
+    emptyState.className = 'empty-list';
+    emptyState.innerHTML = `
+        <div class="hint">Add some ingredients to your shopping list.</div>
+        <div class="arrow">↓</div>
+    `;
+    listsContainer.appendChild(emptyState);
+}
+
+function setupEventListeners() {
+    archivedListsBtn.addEventListener('click', () => {
+        mainContainer.style.display = 'none';
+        archivedContainer.style.display = 'block';
+        renderArchivedLists();
+    });
+    
+    backToListsBtn.addEventListener('click', () => {
+        archivedContainer.style.display = 'none';
+        mainContainer.style.display = 'block';
+    });
+    
+    newListBtn.addEventListener('click', () => {
+        newListModal.style.display = 'block';
+    });
+    
+    cancelNewListBtn.addEventListener('click', () => {
+        newListModal.style.display = 'none';
+        document.getElementById('new-list-name').value = '';
+    });
+    
+    createNewListBtn.addEventListener('click', createNewList);
+    
+
+    addItemBtn.addEventListener('click', () => {
+        addItemModal.style.display = 'block';
+    });
+    
+    cancelAddItemBtn.addEventListener('click', () => {
+        addItemModal.style.display = 'none';
+        resetAddItemForm();
+    });
+    
+    confirmAddItemBtn.addEventListener('click', addNewItem);
+    
+    cancelEditItemBtn.addEventListener('click', () => {
+        editItemModal.style.display = 'none';
+    });
+    
+    confirmEditItemBtn.addEventListener('click', updateItem);
+}
+
+function createNewList() {
+const listName = document.getElementById('new-list-name').value.trim();
+
+if (!listName) {
+alert('Please enter a list name');
+return;
+}
+
+const newList = {
+id: listIdCounter++,
+name: listName,
+createdDate: getCurrentDate(),
+archived: false,
+items: []
+};
+shoppingLists.push(newList);
+
+currentListId = newList.id;
+
+newListModal.style.display = 'none';
+document.getElementById('new-list-name').value = '';
+
+renderLists();
+}
+
+function addNewItem() {
+    const itemName = document.getElementById('new-item-name').value.trim();
+    const itemQuantity = document.getElementById('new-item-quantity').value.trim();
+    const itemCategory = document.getElementById('new-item-category').value;
+    
+    if (!itemName) {
+        alert('Please enter an item name');
+        return;
+    }
+    
+    if (!itemQuantity) {
+        alert('Please enter a quantity');
+        return;
+    }
+    
+    const newItem = {
+        id: itemIdCounter++,
+        name: itemName,
+        quantity: itemQuantity,
+        category: itemCategory,
+        checked: false
     };
     
-    // Instead of replacing the current list, we just add the new one
-    shoppingLists.push(newList);
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    currentList.items.push(newItem);
     
-    // Switch to the new list
-    currentListId = newList.id;
-    
-    newListModal.style.display = 'none';
-    document.getElementById('new-list-name').value = '';
+    addItemModal.style.display = 'none';
+    resetAddItemForm();
     
     renderLists();
 }
-        
-        // Add new item
-        function addNewItem() {
-            const itemName = document.getElementById('new-item-name').value.trim();
-            const itemQuantity = document.getElementById('new-item-quantity').value.trim();
-            const itemCategory = document.getElementById('new-item-category').value;
-            
-            if (!itemName) {
-                alert('Please enter an item name');
-                return;
-            }
-            
-            if (!itemQuantity) {
-                alert('Please enter a quantity');
-                return;
-            }
-            
-            const newItem = {
-                id: itemIdCounter++,
-                name: itemName,
-                quantity: itemQuantity,
-                category: itemCategory,
-                checked: false
-            };
-            
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            currentList.items.push(newItem);
-            
-            addItemModal.style.display = 'none';
-            resetAddItemForm();
-            
-            renderLists();
-        }
-        
-        // Reset add item form
-        function resetAddItemForm() {
-            document.getElementById('new-item-name').value = '';
-            document.getElementById('new-item-quantity').value = '';
-            document.getElementById('new-item-category').value = 'fruits';
-        }
-        
-        // Toggle item check
-        function toggleItemCheck(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const item = currentList.items.find(item => item.id === itemId);
-            
-            if (item) {
-                item.checked = !item.checked;
-                renderLists();
-            }
-        }
-        
-        // Edit item
-        function editItem(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const item = currentList.items.find(item => item.id === itemId);
-            
-            if (item) {
-                document.getElementById('edit-item-name').value = item.name;
-                document.getElementById('edit-item-quantity').value = item.quantity;
-                document.getElementById('edit-item-category').value = item.category;
-                
-                // Store item ID for update
-                editItemModal.dataset.itemId = itemId;
-                
-                editItemModal.style.display = 'block';
-            }
-        }
-        
-        // Update item
-        function updateItem() {
-            const itemId = parseInt(editItemModal.dataset.itemId);
-            const itemName = document.getElementById('edit-item-name').value.trim();
-            const itemQuantity = document.getElementById('edit-item-quantity').value.trim();
-            const itemCategory = document.getElementById('edit-item-category').value;
-            
-            if (!itemName) {
-                alert('Please enter an item name');
-                return;
-            }
-            
-            if (!itemQuantity) {
-                alert('Please enter a quantity');
-                return;
-            }
-            
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const item = currentList.items.find(item => item.id === itemId);
-            
-            if (item) {
-                item.name = itemName;
-                item.quantity = itemQuantity;
-                item.category = itemCategory;
-                
-                editItemModal.style.display = 'none';
-                
-                renderLists();
-            }
-        }
-        
-        // Remove item
-        function removeItem(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const itemIndex = currentList.items.findIndex(item => item.id === itemId);
-            
-            if (itemIndex !== -1) {
-                if (confirm('Are you sure you want to remove this item?')) {
-                    currentList.items.splice(itemIndex, 1);
-                    renderLists();
-                }
-            }
-        }
-        
-        // Duplicate item
-        function duplicateItem(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const item = currentList.items.find(item => item.id === itemId);
-            
-            if (item) {
-                const newItem = {
-                    id: itemIdCounter++,
-                    name: item.name,
-                    quantity: item.quantity,
-                    category: item.category,
-                    checked: false
-                };
-                
-                currentList.items.push(newItem);
-                renderLists();
-            }
-        }
-        
-        // Toggle favorite (this is just a placeholder, you would need additional UI to show favorites)
-        function toggleFavorite(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            const item = currentList.items.find(item => item.id === itemId);
-            
-            if (item) {
-                item.favorite = !item.favorite;
-                const heartIcon = document.querySelector(`.item[data-id="${itemId}"] .heart-icon`);
-                if (item.favorite) {
-                    heartIcon.style.color = '#d9534f';
-                } else {
-                    heartIcon.style.color = '#888';
-                }
-            }
-        }
-        
-        // Edit list name
-        function editListName(listId) {
-            const list = shoppingLists.find(list => list.id === listId);
-            
-            if (list) {
-                const newName = prompt('Enter new list name', list.name);
-                
-                if (newName && newName.trim() !== '') {
-                    list.name = newName.trim();
-                    renderLists();
-                }
-            }
-        }
-        
-        // Archive list
-        function archiveList(listId) {
-            const list = shoppingLists.find(list => list.id === listId);
-            
-            if (list) {
-                list.archived = true;
-                
-                // If the archived list was the current list, switch to another active list
-                if (listId === currentListId) {
-                    const activeList = shoppingLists.find(list => !list.archived);
-                    if (activeList) {
-                        currentListId = activeList.id;
-                    } else {
-                        // No active lists left, show empty state
-                        currentListId = null;
-                    }
-                }
-                
-                renderLists();
-            }
-        }
-        
-        // Restore list from archive
-        function restoreList(listId) {
-    // Get current active list count
-    const activeLists = shoppingLists.filter(list => !list.archived);
+function resetAddItemForm() {
+    document.getElementById('new-item-name').value = '';
+    document.getElementById('new-item-quantity').value = '';
+    document.getElementById('new-item-category').value = 'fruits';
+}
+
+function toggleItemCheck(itemId) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const item = currentList.items.find(item => item.id === itemId);
     
-    // If there's at least one active list, show confirmation
-    if (activeLists.length > 0) {
-        if (!confirm("Are you sure you want to unarchive this shopping list? Your current active shopping list will be saved in your archived lists.")) {
-            return; // User canceled
-        }
-        
-        // Archive all currently active lists to make room for the restored one
-        activeLists.forEach(list => {
-            list.archived = true;
-        });
-    }
-    
-    // Check in shopping lists first
-    const list = shoppingLists.find(list => list.id === listId);
-    
-    if (list) {
-        list.archived = false;
-        currentListId = list.id;
+    if (item) {
+        item.checked = !item.checked;
         renderLists();
-        archivedContainer.style.display = 'none';
-        mainContainer.style.display = 'block';
+    }
+}
+
+function editItem(itemId) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const item = currentList.items.find(item => item.id === itemId);
+    
+    if (item) {
+        document.getElementById('edit-item-name').value = item.name;
+        document.getElementById('edit-item-quantity').value = item.quantity;
+        document.getElementById('edit-item-category').value = item.category;
+        
+        editItemModal.dataset.itemId = itemId;
+        
+        editItemModal.style.display = 'block';
+    }
+}
+
+function updateItem() {
+    const itemId = parseInt(editItemModal.dataset.itemId);
+    const itemName = document.getElementById('edit-item-name').value.trim();
+    const itemQuantity = document.getElementById('edit-item-quantity').value.trim();
+    const itemCategory = document.getElementById('edit-item-category').value;
+    
+    if (!itemName) {
+        alert('Please enter an item name');
         return;
     }
     
-    // Check in archived lists if not found
-    const archivedIndex = archivedLists.findIndex(list => list.id === listId);
+    if (!itemQuantity) {
+        alert('Please enter a quantity');
+        return;
+    }
     
-    if (archivedIndex !== -1) {
-        const restoredList = archivedLists[archivedIndex];
-        restoredList.archived = false;
-        shoppingLists.push(restoredList);
-        archivedLists.splice(archivedIndex, 1);
-        currentListId = restoredList.id;
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const item = currentList.items.find(item => item.id === itemId);
+    
+    if (item) {
+        item.name = itemName;
+        item.quantity = itemQuantity;
+        item.category = itemCategory;
+        
+        editItemModal.style.display = 'none';
+        
         renderLists();
-        archivedContainer.style.display = 'none';
-        mainContainer.style.display = 'block';
     }
 }
-        
-        // Search items
-        function searchItems() {
-            const searchInput = document.getElementById('search-input');
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            const items = document.querySelectorAll('.item');
-            
-            items.forEach(item => {
-                const itemName = item.querySelector('.item-name').textContent.toLowerCase();
-                
-                if (itemName.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-        
-        // Filter by category
-        function filterByCategory(category) {
-            const items = document.querySelectorAll('.item');
-            
-            // If there's an active filter on this category already, remove it
-            const alreadyFiltered = document.querySelector('.category-filters .category.' + category).classList.contains('active');
-            
-            // Reset all filters
-            document.querySelectorAll('.category-filters .category').forEach(cat => {
-                cat.classList.remove('active');
-            });
-            
-            // If the filter wasn't already active, apply it
-            if (!alreadyFiltered) {
-                document.querySelector('.category-filters .category.' + category).classList.add('active');
-                
-                items.forEach(item => {
-                    if (item.dataset.category === category) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            } else {
-                // If the filter was already active, show all items
-                items.forEach(item => {
-                    item.style.display = 'flex';
-                });
-            }
-        }
-        
-        // Sort items
-        function sortItems(sortBy) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
-            
-            if (!currentList) return;
-            
-            switch (sortBy) {
-                case 'az':
-                    currentList.items.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'za':
-                    currentList.items.sort((a, b) => b.name.localeCompare(a.name));
-                    break;
-                case 'category':
-                    currentList.items.sort((a, b) => a.category.localeCompare(b.category));
-                    break;
-            }
-            
+
+function removeItem(itemId) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const itemIndex = currentList.items.findIndex(item => item.id === itemId);
+    
+    if (itemIndex !== -1) {
+        if (confirm('Are you sure you want to remove this item?')) {
+            currentList.items.splice(itemIndex, 1);
             renderLists();
         }
-        
-        // Utility function to get current date in format MM/DD/YYYY
-        function getCurrentDate() {
-            const date = new Date();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const year = date.getFullYear();
-            
-            return `${month}/${day}/${year}`;
-        }
-        
-        // Add action buttons to list headers (archive button)
-        function addActionButtons() {
-            const listHeader = document.querySelector('.list-header');
-            
-            if (listHeader) {
-                // Check if we already have an archive button
-                if (!listHeader.querySelector('.archive-btn')) {
-                    const archiveBtn = document.createElement('button');
-                    archiveBtn.className = 'button archive-btn';
-                    archiveBtn.textContent = 'Archive';
-                    archiveBtn.addEventListener('click', () => archiveList(currentListId));
-                    
-                    listHeader.appendChild(archiveBtn);
-                }
-            }
-        }
-        
-        // Add CSS to highlight active category filter
-        function addActiveFilterStyle() {
-            // Add style if not already present
-            if (!document.getElementById('active-filter-style')) {
-                const style = document.createElement('style');
-                style.id = 'active-filter-style';
-                style.textContent = `
-                    .category.active {
-                        opacity: 1;
-                        box-shadow: 0 0 0 2px #5c7064;
-                    }
-                    .category:not(.active) {
-                        opacity: 0.7;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-        }
+    }
+}
 
-        function addListSelectorStyle() {
-            if (!document.getElementById('list-selector-style')) {
-            const style = document.createElement('style');
-            style.id = 'list-selector-style';
-            style.textContent = `
-                .list-selector {
-                    margin-bottom: 20px;
-                    padding: 10px;
-                    background-color: #f7f7f7;
-                    border-radius: 8px;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-            
-                .list-selector select {
-                    padding: 8px;
-                    border-radius: 5px;
-                    border: 1px solid #ddd;
-                    flex-grow: 1;
-                    background-color: white;
-                }
-            `;
-            document.head.appendChild(style);
+function duplicateItem(itemId) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const item = currentList.items.find(item => item.id === itemId);
+    
+    if (item) {
+        const newItem = {
+            id: itemIdCounter++,
+            name: item.name,
+            quantity: item.quantity,
+            category: item.category,
+            checked: false
+        };
+        
+        currentList.items.push(newItem);
+        renderLists();
+    }
+}
+
+function toggleFavorite(itemId) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    const item = currentList.items.find(item => item.id === itemId);
+    
+    if (item) {
+        item.favorite = !item.favorite;
+        const heartIcon = document.querySelector(`.item[data-id="${itemId}"] .heart-icon`);
+        if (item.favorite) {
+            heartIcon.style.color = '#d9534f';
+        } else {
+            heartIcon.style.color = '#888';
         }
     }
+}
+
+function editListName(listId) {
+    const list = shoppingLists.find(list => list.id === listId);
+    
+    if (list) {
+        const newName = prompt('Enter new list name', list.name);
         
-        // Initialize app when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            initApp();
-            addActiveFilterStyle();
-            addListSelectorStyle();
-            
-            // Add archive button to the current list
-            setTimeout(addActionButtons, 100);
-            
-            // Implement clicking outside of modals to close them
-            window.addEventListener('click', (event) => {
-                if (event.target === newListModal) {
-                    newListModal.style.display = 'none';
-                }
-                if (event.target === addItemModal) {
-                    addItemModal.style.display = 'none';
-                }
-                if (event.target === editItemModal) {
-                    editItemModal.style.display = 'none';
-                }
-            });
+        if (newName && newName.trim() !== '') {
+            list.name = newName.trim();
+            renderLists();
+        }
+    }
+}
+
+function archiveList(listId) {
+    const list = shoppingLists.find(list => list.id === listId);
+    
+    if (list) {
+        list.archived = true;
+        
+        if (listId === currentListId) {
+            const activeList = shoppingLists.find(list => !list.archived);
+            if (activeList) {
+                currentListId = activeList.id;
+            } else {
+                currentListId = null;
+            }
+        }
+        
+        renderLists();
+    }
+}
+
+function restoreList(listId) {
+const activeLists = shoppingLists.filter(list => !list.archived);
+
+if (activeLists.length > 0) {
+if (!confirm("Are you sure you want to unarchive this shopping list? Your current active shopping list will be saved in your archived lists.")) {
+    return; 
+}
+
+activeLists.forEach(list => {
+    list.archived = true;
+});
+}
+
+const list = shoppingLists.find(list => list.id === listId);
+
+if (list) {
+list.archived = false;
+currentListId = list.id;
+renderLists();
+archivedContainer.style.display = 'none';
+mainContainer.style.display = 'block';
+return;
+}
+
+const archivedIndex = archivedLists.findIndex(list => list.id === listId);
+
+if (archivedIndex !== -1) {
+const restoredList = archivedLists[archivedIndex];
+restoredList.archived = false;
+shoppingLists.push(restoredList);
+archivedLists.splice(archivedIndex, 1);
+currentListId = restoredList.id;
+renderLists();
+archivedContainer.style.display = 'none';
+mainContainer.style.display = 'block';
+}
+}
+
+function searchItems() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput.value.toLowerCase();
+    
+    const items = document.querySelectorAll('.item');
+    
+    items.forEach(item => {
+        const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+        
+        if (itemName.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterByCategory(category) {
+    const items = document.querySelectorAll('.item');
+    
+    const alreadyFiltered = document.querySelector('.category-filters .category.' + category).classList.contains('active');
+    
+    document.querySelectorAll('.category-filters .category').forEach(cat => {
+        cat.classList.remove('active');
+    });
+    
+    if (!alreadyFiltered) {
+        document.querySelector('.category-filters .category.' + category).classList.add('active');
+        
+        items.forEach(item => {
+            if (item.dataset.category === category) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
         });
-        
-    </script>
+    } else {
+        items.forEach(item => {
+            item.style.display = 'flex';
+        });
+    }
+}
+
+function sortItems(sortBy) {
+    const currentList = shoppingLists.find(list => list.id === currentListId);
+    
+    if (!currentList) return;
+    
+    switch (sortBy) {
+        case 'az':
+            currentList.items.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case 'za':
+            currentList.items.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+        case 'category':
+            currentList.items.sort((a, b) => a.category.localeCompare(b.category));
+            break;
+    }
+    
+    renderLists();
+}
+function getCurrentDate() {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    
+    return `${month}/${day}/${year}`;
+}
+
+function addActionButtons() {
+    const listHeader = document.querySelector('.list-header');
+    
+    if (listHeader) {
+        if (!listHeader.querySelector('.archive-btn')) {
+            const archiveBtn = document.createElement('button');
+            archiveBtn.className = 'button archive-btn';
+            archiveBtn.textContent = 'Archive';
+            archiveBtn.addEventListener('click', () => archiveList(currentListId));
+            
+            listHeader.appendChild(archiveBtn);
+        }
+    }
+}
+
+function addActiveFilterStyle() {
+    if (!document.getElementById('active-filter-style')) {
+        const style = document.createElement('style');
+        style.id = 'active-filter-style';
+        style.textContent = `
+            .category.active {
+                opacity: 1;
+                box-shadow: 0 0 0 2px #5c7064;
+            }
+            .category:not(.active) {
+                opacity: 0.7;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+function addListSelectorStyle() {
+    if (!document.getElementById('list-selector-style')) {
+    const style = document.createElement('style');
+    style.id = 'list-selector-style';
+    style.textContent = `
+        .list-selector {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .list-selector select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            flex-grow: 1;
+            background-color: white;
+        }
+    `;
+    document.head.appendChild(style);
+}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+    addActiveFilterStyle();
+    addListSelectorStyle();
+    
+    setTimeout(addActionButtons, 100);
+    
+    window.addEventListener('click', (event) => {
+        if (event.target === newListModal) {
+            newListModal.style.display = 'none';
+        }
+        if (event.target === addItemModal) {
+            addItemModal.style.display = 'none';
+        }
+        if (event.target === editItemModal) {
+            editItemModal.style.display = 'none';
+        }
+    });
+});
+
+</script>
 </body>
 </html>

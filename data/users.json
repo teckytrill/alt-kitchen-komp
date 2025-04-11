@@ -14,7 +14,20 @@
       "main": {
         "id": 1,
         "name": "Weekly Groceries",
-        "ingredients": []
+        "ingredients": [
+          {
+            "name": "Milk",
+            "quantity": "2 liters"
+          },
+          {
+            "name": "Cream Cheese",
+            "quantity": "2 pcs"
+          },
+          {
+            "name": "Ice Cream",
+            "quantity": "1 cups"
+          }
+        ]
       }
     },
     "archived_lists": [

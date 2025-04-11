@@ -45,7 +45,6 @@
       if (users[username] === password) {
         localStorage.setItem("activeUser", username);
 
-        // Prepopulate if not already
         const key = `kitchenInventory_${username}`;
         if (!localStorage.getItem(key)) {
           const prefill = {

@@ -1,6 +1,3 @@
-/***************************************************
- * Global color mapping for tag badges by letter
- ***************************************************/
 const letterColorMap = {
     A: "#1abc9c",
     B: "#2ecc71",
@@ -29,46 +26,6 @@ const letterColorMap = {
     Y: "#9370db",
     Z: "#8fbc8f"
   };
-  
-  /***************************************************
-   * On page load, fetch the JSON and render 
-   * "Saved Recipes" + "Recently Viewed"
-   ***************************************************/
-
-/*
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Load recipes.json first
-  fetch('recipes.json')
-    .then(res => res.json())
-    .then(data => {
-      // Save the entire JSON object in allData
-      allData = data;
-
-      // Now you can call any functions that depend on `allData`:
-      loadRecipesData();       // e.g., renderSavedRecipes, renderRecentlyViewed, renderMyRecipes
-    })
-    .catch(err => console.error('Error loading recipes.json:', err));
-
-  // 2) Independently load your recipeCollections.json
-  loadRecipeCollections();  
-});
-  
-function loadRecipesData() {
-  // Example usage:
-  renderSavedRecipes(allData.savedRecipes);
-  renderRecentlyViewed(allData.recentlyViewedRecipes);
-  renderMyRecipes(allData.userRecipes); 
-}
-
-  function loadRecipeCollections() {
-    fetch('recipeCollections.json')
-      .then(res => res.json())
-      .then(data => {
-        const collections = data.collections || [];
-        renderBrowseCollections(collections);
-      })
-      .catch(err => console.error("Error loading recipeCollections.json:", err));
-  }*/
 
   let allData = {};
 
@@ -77,19 +34,18 @@ function loadRecipesData() {
       .then(res => res.json())
       .then(data => {
         allData = data;
-  
-        // 1) Load local user recipes
+
         const storedLocalUser = localStorage.getItem('localUserRecipes');
         if (storedLocalUser) {
           try {
             allData.userRecipes = JSON.parse(storedLocalUser);
           } catch(e) {
             console.error("Error parsing local user recipes from storage:", e);
-            allData.userRecipes = []; // fallback to empty if something's wrong
+            allData.userRecipes = []; 
           }
         }
   
-        loadRecipesData(); // Render everything
+        loadRecipesData(); 
         loadRecipeCollections();
       })
       .catch(err => console.error("Error loading recipes.json:", err));
@@ -97,8 +53,7 @@ function loadRecipesData() {
 
 
 
-  function loadRecipesData() {
-    // Example usage:  
+  function loadRecipesData() { 
     if (allData.savedRecipes) {
       renderSavedRecipes(allData.savedRecipes);
     }
@@ -108,14 +63,9 @@ function loadRecipesData() {
     if (allData.userRecipes) {
       renderMyRecipes(allData.userRecipes);
     }
-    // ... any other data you want to render
   }
 
   function loadRecipeCollections() {
-    // If you store them inside allData, you can skip fetching:
-    // e.g. renderBrowseCollections(allData.collections);
-  
-    // Or if you are fetching recipeCollections.json, do:
     fetch('data/recipeCollection.json')
       .then(res => res.json())
       .then(collectionData => {
@@ -124,33 +74,25 @@ function loadRecipesData() {
       })
       .catch(err => console.error("Error loading recipeCollections.json:", err));
   }
-  /***************************************************
-   * Rendering the "Saved Recipes" section
-   ***************************************************/
+
   function renderSavedRecipes(recipes) {
     const container = document.querySelector('.saved-recipes-container');
     container.innerHTML = '';
   
     recipes.forEach((recipe, index) => {
-      const card = createRecipeCard(recipe, index, /*offset*/ 0);
+      const card = createRecipeCard(recipe, index,  0);
       container.appendChild(card);
     });
   }
   
-  /***************************************************
-   * Rendering the "Recently Viewed" section
-   ***************************************************/
   function renderRecentlyViewed(recipes) {
     const container = document.querySelector('.recently-viewed-container');
     container.innerHTML = '';
   
-    // We offset the index by the length of savedRecipes, so we don't collide.
-    // Another approach is to combine them in a single array in the detail page, 
-    // but let's offset to keep it unique.
     const savedCount = document.querySelector('.saved-recipes-container').children.length;
   
     recipes.forEach((recipe, i) => {
-      const realIndex = savedCount + i; // offset
+      const realIndex = savedCount + i; 
       const card = createRecipeCard(recipe, realIndex);
       container.appendChild(card);
     });
@@ -162,12 +104,10 @@ function loadRecipesData() {
     container.innerHTML = '';
   
     collections.forEach(collection => {
-      // Create a "collection card" or "tab"
       const div = document.createElement('div');
-      div.classList.add('recipe-tab'); // reuse your .recipe-tab styling
+      div.classList.add('recipe-tab'); 
       div.textContent = collection.title;
   
-      // Clicking => go to a new page, e.g. collectionDetail.html?collection=Recipes+for+Griffin
       div.onclick = () => {
         openCollectionDetail(collection.title);
       };
@@ -177,13 +117,9 @@ function loadRecipesData() {
   }
   
   function openCollectionDetail(collectionTitle) {
-    // e.g. go to "collectionDetail.html?collection=Recipes%20for%20Griffin"
     window.location.href = `collectionDetail.html?collection=${encodeURIComponent(collectionTitle)}`;
   }
   
-  /***************************************************
-   * Create a single recipe card element
-   ***************************************************/
   function createRecipeCard(recipe) {
     const card = document.createElement('div');
     card.classList.add('recipe-card');
@@ -229,10 +165,9 @@ function loadRecipesData() {
       badge.style.backgroundColor = letterColorMap[firstLetter] || "#BB65A0";
       badge.textContent = firstLetter;
   
-      // Clicking a tag might do something else or a small popup
       badge.addEventListener('click', event => {
         event.stopPropagation();
-        showTagMeaning(tag);  // custom popup overlay
+        showTagMeaning(tag); 
       });
   
       tagsContainer.appendChild(badge);
@@ -243,36 +178,23 @@ function loadRecipesData() {
     return card;
   }
   
-  /***************************************************
-   * When user clicks a recipe card
-   * We'll navigate to the detail page with ?id={index}
-   ***************************************************/
   function openRecipeByName(recipeName) {
     window.location.href = `recipeDetail.html?name=${encodeURIComponent(recipeName)}`;
   }
   
-  /***************************************************
-   * Placeholders for search, tabClicked, gotoPage
-   ***************************************************/
   function handleSearch() {
     const query = document.getElementById('searchBar').value;
     console.log("Search for:", query);
-    // Implement filtering or navigation
   }
   
   function tabClicked(tabName) {
     console.log("Tab clicked:", tabName);
-    // Navigate or filter
   }
   
   function gotoPage(pageName) {
     console.log("Goto page:", pageName);
-    // Page navigation logic
   }
 
-  /***************************************************
- * Tag Popup Functions
- ***************************************************/
 function showTagMeaning(tag) {
     const overlay = document.getElementById('tagPopupOverlay');
     const titleEl = document.getElementById('popupTagTitle');
@@ -318,7 +240,6 @@ function showTagMeaning(tag) {
     event.preventDefault();
     const form = event.target;
   
-    // 1) Collect all fields
     const recipeName = form.recipeName.value.trim();
     const length = parseInt(form.length.value, 10) || 0;
     const feeds = parseInt(form.feeds.value, 10) || 1;
@@ -339,7 +260,7 @@ function showTagMeaning(tag) {
       };
     });
 
-    // Get instructions from inputs
+
     const instructionInputs = document.querySelectorAll('.instruction-step-input');
     const steps = Array.from(instructionInputs)
       .map(input => input.value.trim())
@@ -373,7 +294,6 @@ function showTagMeaning(tag) {
       ? form.sugarsValue.value + form.sugarsUnit.value 
       : "";
   
-    // 2) Build new recipe object
     const newRecipe = {
       name: recipeName,
       length: length,
@@ -394,42 +314,30 @@ function showTagMeaning(tag) {
       }
     };
   
-    // 3) Insert into allData.userRecipes
     if (!allData.userRecipes) {
       allData.userRecipes = [];
     }
     allData.userRecipes.push(newRecipe);
   
-    // 4) Re-render
     renderMyRecipes(allData.userRecipes);
   
-    // 5) Store the updated userRecipes in localStorage
     localStorage.setItem('localUserRecipes', JSON.stringify(allData.userRecipes));
   
-    // 6) Reset form & close overlay
     form.reset();
     closeAddRecipeForm();
   }
   
-  
-/**********************************************
- * Example "renderMyRecipes" function
- **********************************************/
 function renderMyRecipes(recipes) {
   const container = document.querySelector('.my-recipes-container');
-  if (!container) return; // safeguard
+  if (!container) return;
 
   container.innerHTML = '';
   recipes.forEach(recipe => {
-    // Use your existing createRecipeCard or create a custom narrow card
     const card = createRecipeCard(recipe);
     container.appendChild(card);
   });
 }
   
-  /*******************************************************
-   * Example function to close the overlay
-   *******************************************************/
   function closeAddRecipeForm() {
     const overlay = document.getElementById('addRecipeOverlay');
     if (overlay) {
@@ -437,53 +345,40 @@ function renderMyRecipes(recipes) {
     }
   }
 
-  /*******************************************
- * handleSearch(): Triggered by the 🔍 button
- *******************************************/
 function handleSearch() {
   const query = document.getElementById('searchBar').value.trim().toLowerCase();
   if (!query) {
-    return; // ignore empty search
+    return; 
   }
 
-  // 1) Fetch recipes.json (or use in-memory allData if you already have it)
   fetch('data/recipes.json')
     .then(res => res.json())
     .then(data => {
-      // Combine all relevant arrays
       const allRecipes = [
         ...(data.savedRecipes || []),
         ...(data.recentlyViewedRecipes || []),
         ...(data.userRecipes || [])
       ];
 
-      // 2) Filter by partial match in name OR in tags
       const results = allRecipes.filter(recipe => {
         const nameMatch = recipe.name.toLowerCase().includes(query);
-        // tags might be array of strings
         const tagMatch = (recipe.tags || []).some(tag => 
           tag.toLowerCase().includes(query)
         );
         return nameMatch || tagMatch;
       });
 
-      // 3) Show the results in the narrow format
       displaySearchResults(results);
 
-      // 4) Hide the main sections, show the search results container
       document.querySelector('main').style.display = 'none';
       document.getElementById('searchResultsSection').style.display = 'block';
     })
     .catch(err => console.error('Error searching recipes:', err));
 }
 
-/*******************************************
- * displaySearchResults(results):
- * Renders the narrower card layout
- *******************************************/
 function displaySearchResults(recipes) {
   const container = document.getElementById('searchResultsContainer');
-  container.innerHTML = ''; // clear old results
+  container.innerHTML = ''; 
 
   recipes.forEach(recipe => {
     const card = createNarrowRecipeCard(recipe);
@@ -491,10 +386,6 @@ function displaySearchResults(recipes) {
   });
 }
 
-/*******************************************
- * createNarrowRecipeCard(recipe):
- * Similar to the collection layout
- *******************************************/
 function createNarrowRecipeCard(recipe) {
   const card = document.createElement('div');
   card.classList.add('narrow-recipe-card');
@@ -517,7 +408,6 @@ function createNarrowRecipeCard(recipe) {
   // details
   const detailsEl = document.createElement('div');
   detailsEl.classList.add('narrow-recipe-details');
-  // e.g. "20m • Feeds 2 • Easy"
   detailsEl.textContent = `${recipe.length}m • Feeds ${recipe.feeds} • ${recipe.difficulty}`;
 
   // tags
@@ -530,8 +420,7 @@ function createNarrowRecipeCard(recipe) {
     const firstLetter = tag.charAt(0).toUpperCase();
     badge.style.backgroundColor = letterColorMap[firstLetter] || "#BB65A0";
     badge.textContent = firstLetter;
-    // If you want a popup for tags, do e.g.:
-    // badge.addEventListener('click', e => { e.stopPropagation(); showTagMeaning(tag); });
+
     tagsContainer.appendChild(badge);
   });
 
@@ -545,15 +434,9 @@ function createNarrowRecipeCard(recipe) {
   return card;
 }
 
-/*******************************************
- * clearSearch():
- * Called by the "Close" button in results
- * -> Hides search results, shows main
- *******************************************/
+
 function clearSearch() {
-  // Hide search results container
   document.getElementById('searchResultsSection').style.display = 'none';
-  // Show the main content
   document.querySelector('main').style.display = 'block';
 }
 
@@ -566,21 +449,16 @@ function closeFilterOverlay() {
 }
 
 function applyFilters() {
-  // 1) Gather filter states
   const servingSize = parseInt(document.getElementById('filterServingSize').value, 10);
-
-  // For difficulty, we have 3 checkboxes
   const diffs = Array.from(document.getElementsByName('filterDifficulty'))
     .filter(cb => cb.checked)
-    .map(cb => cb.value); // e.g. ["Easy", "Medium"]
+    .map(cb => cb.value);
 
-  // For tags, up to 3 drop-downs
   const tag1 = document.getElementById('filterTag1').value;
   const tag2 = document.getElementById('filterTag2').value;
   const tag3 = document.getElementById('filterTag3').value;
   const chosenTags = [tag1, tag2, tag3].filter(t => t !== "");
 
-  // For "use pantry" yes/no
   let usePantry = "no";
   const pantryRadios = document.getElementsByName('usePantry');
   for (let r of pantryRadios) {
@@ -590,36 +468,21 @@ function applyFilters() {
     }
   }
 
-  // 2) Combine all recipes
   const allRecipes = [
     ...(allData.savedRecipes || []),
     ...(allData.recentlyViewedRecipes || []),
     ...(allData.userRecipes || [])
   ];
 
-  // 3) If we need the user's pantry, we might fetch or parse from users.json
-  // Or if we have a global user object, we do something like:
-  // for now let's assume we have userPantry array of items:
-  // e.g. userPantry = ["Eggs", "Flour", "Milk", ...]
 
   let userPantry = [];
-  // If you already fetched users.json or have it somewhere:
-  // userPantry = userData.pantry.map(item => item.name.toLowerCase());
-
-  // 4) Filter
   const filtered = allRecipes.filter(r => {
-    // a) Serving size condition
     if (r.feeds > servingSize) return false;
-
-    // b) Difficulty condition (if diffs is non-empty)
     if (diffs.length > 0 && !diffs.includes(r.difficulty)) {
       return false;
     }
 
-    // c) Tag condition
-    // For each chosen tag, check if recipe has it
     if (chosenTags.length > 0) {
-      // must contain *all* chosen tags or *any*? Let's assume "all"
       for (let t of chosenTags) {
         if (!r.tags || !r.tags.includes(t)) {
           return false;
@@ -627,10 +490,7 @@ function applyFilters() {
       }
     }
 
-    // d) If usePantry = yes, check if we can make it
     if (usePantry === "yes") {
-      // We want to see if every ingredient is in userPantry
-      // We'll do a simple match by name ignoring quantity
       for (let ing of (r.ingredients || [])) {
         const ingName = ing.item.name.toLowerCase().trim();
         if (!userPantry.includes(ingName)) {
@@ -638,17 +498,14 @@ function applyFilters() {
         }
       }
     }
-    return true; // passes all stacked conditions
+    return true; 
   });
 
-  // 5) Display results
   displaySearchResults(filtered);
 
-  // 6) Hide main sections, show results
   document.querySelector('main').style.display = 'none';
   document.getElementById('searchResultsSection').style.display = 'block';
 
-  // 7) Close the filter overlay
   closeFilterOverlay();
 }
 

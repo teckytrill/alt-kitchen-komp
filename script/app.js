@@ -3,15 +3,12 @@ function loadPage(page) {
       .then(res => res.text())
       .then(html => {
         appContent.innerHTML = html;
-  
-        // Handle shopping list logic when that page loads
         if (page === 'shoppinglist') {
           setupShoppingList();
         }
       });
   }
   
-  // Main shopping list logic
   function setupShoppingList() {
     const form = document.getElementById('shopping-form');
     const list = document.getElementById('shopping-list');

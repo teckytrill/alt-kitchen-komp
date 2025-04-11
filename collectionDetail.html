@@ -1,197 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Collection Detail</title>
-  <link rel="stylesheet" href="collectionDetail.css"/>
+ <meta charset="UTF-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <title>Collection Detail</title>
+ <link rel="stylesheet" href="style/main.css"/>
 </head>
-
-
-<style>
-
-
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #F7F5EE;
-    color: #333;
-    margin: 0;
-    padding: 0;
-  }
-  .collection-header {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    background-color: #FFF;
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
-  }
-  .back-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    cursor: pointer;
-  }
-  .collection-header h1 {
-    font-size: 1.25rem;
-    color: #A35C43;
-  }
-  .collection-recipes {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: calc(100vh - 70px); /* some offset for header */
-    overflow-y: auto; /* vertical scroll */
-  }
-  /* "Narrow" recipe cards */
-  .narrow-recipe-card {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    cursor: pointer;
-  }
-  .narrow-recipe-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 1rem;
-  }
-  .narrow-recipe-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .narrow-recipe-info h3 {
-    margin-bottom: 0.25rem;
-    font-size: 1rem;
-  }
-  .narrow-recipe-details {
-    font-size: 0.9rem;
-    color: #666;
-  }
-
-   /* TAG POPUP OVERLAY */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: none; /* hidden by default; show w/ script */
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-
-  .tag-badge {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%; /* This makes it a circle */
-    background-color: #BB65A0; /* fallback color */
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .popup-content {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 1rem;
-    position: relative;
-    max-width: 300px;
-    width: 80%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  .close-popup-btn {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-  }
-  .close-btn {
-    background: #eee;
-    border: none;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    cursor: pointer;
-  }
-  
-      /* iPad Frame & Camera */
-    .ipad-frame {
-      position: relative;
+    <style>
+    .collection-header {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      background-color: #FFF;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    .collection-header h1 {
+      font-size: 1.25rem;
+      color: #A35C43;
+    }
+    .collection-recipes {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: calc(100vh - 70px); 
+      overflow-y: auto; 
+    }
+    .narrow-recipe-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .narrow-recipe-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 1rem;
+    }
+    .narrow-recipe-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .narrow-recipe-info h3 {
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+    .narrow-recipe-details {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      min-height: 100vh;
-      background-color: #F7F5EE; /* iPad background color */
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: none; 
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
     }
 
-    .ipad-camera {
+    .tag-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%; 
+      background-color: #BB65A0;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .popup-content {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+      max-width: 300px;
+      width: 80%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .close-popup-btn {
       position: absolute;
       top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 30px;
-      height: 30px;
-      background-color: #000;   /* black "camera" */
-      border-radius: 50%;
-      /* Adjust to your taste, can be smaller or bigger */
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
     }
-    </style>
-
-
+    .close-btn {
+      background: #eee;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+  </style>
 <body>
-  <div class="ipad-frame">
-    <!-- Simulated camera / notch -->
-    <div class="ipad-camera"></div>
+ <div class="ipad-frame">
+   <div class="ipad-camera"></div>
+   <header class="collection-header">
+     <button class="back-button" onclick="goBack()">←</button>
+     <h1 id="collectionTitle">Collection</h1>
+   </header>
+   <main id="collectionRecipesContainer" class="collection-recipes">
+   </main>
 
-    <!-- Top header (back arrow + collection title) -->
-    <header class="collection-header">
-      <button class="back-button" onclick="goBack()">←</button>
-      <h1 id="collectionTitle">Collection</h1>
-    </header>
+   <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
+     <div class="popup-content" onclick="event.stopPropagation();">
+       <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
+       <h2 id="popupTagTitle">Tag:</h2>
+       <button class="close-btn" onclick="closeTagPopup()">Close</button>
+     </div>
+   </div>
 
-    <!-- Main content area with the narrower recipe cards -->
-    <main id="collectionRecipesContainer" class="collection-recipes">
-      <!-- Dynamically populated via JS -->
-    </main>
+   <nav class="app-navbar">
+     <a href="shoppinglist.html" title="Shopping List">
+       <img src="icons/shoppinglist.svg" alt="Shopping List" />
+     </a>
+     <a href="kitchen.html" title="Kitchen">
+       <img src="icons/kitchen.svg" alt="Kitchen" />
+     </a>
+     <a href="recipes.html" title="Recipes">
+       <img src="icons/recipes.svg" alt="Recipes" />
+     </a>
+     <a href="profile.html" title="Profile">
+       <img src="icons/profile.svg" alt="Profile" />
+     </a>
+   </nav>
+ </div>
 
-    <!-- Tag Popup Overlay -->
-    <div id="tagPopupOverlay" class="overlay" onclick="closeTagPopup()">
-      <div class="popup-content" onclick="event.stopPropagation();">
-        <button class="close-popup-btn" onclick="closeTagPopup()">X</button>
-        <h2 id="popupTagTitle">Tag:</h2>
-        <button class="close-btn" onclick="closeTagPopup()">Close</button>
-      </div>
-    </div>
 
-    <!-- Bottom Nav -->
-    <nav class="app-navbar">
-      <a href="shoppinglist.html" title="Shopping List">
-        <img src="icons/shoppinglist.svg" alt="Shopping List" />
-      </a>
-      <a href="kitchen.html" title="Kitchen">
-        <img src="icons/kitchen.svg" alt="Kitchen" />
-      </a>
-      <a href="recipes.html" title="Recipes">
-        <img src="icons/recipes.svg" alt="Recipes" />
-      </a>
-      <a href="profile.html" title="Profile">
-        <img src="icons/profile.svg" alt="Profile" />
-      </a>
-    </nav>
-  </div>
-
-  <script src="script/collectionDetail.js"></script>
+ <script src="script/collectionDetail.js"></script>
 </body>
 </html>

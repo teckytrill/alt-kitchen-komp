@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kitchen - Kitchen Kompanion</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plaster&display=swap" rel="stylesheet">
@@ -14,10 +13,9 @@
 </head>
 <body>
   <div class="ipad-frame">
-    <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+    <!--<button class="logout-btn" onclick="logoutUser()">🚪 Logout</button> -->
     <div class="ipad-camera"></div>
 
-    <!-- Header -->
     <header class="app-header">
       <div class="header-content">
         <h2>K</h2>
@@ -26,16 +24,13 @@
     </header>
 
     <main class="app-content">
-
-      <!-- Location Tabs -->
       <div class="location-tabs">
         <button class="location-btn active" data-location="Fridge">🧊 Fridge</button>
         <button class="location-btn" data-location="Pantry">🥫 Pantry</button>
         <button class="location-btn" data-location="Freezer">❄️ Freezer</button>
-        <button class="location-btn" data-location="none">🔎 All Pantry Items</button> <!-- New filter -->
+        <button class="location-btn" data-location="none">🔎 All Pantry Items</button> 
       </div>
 
-      <!-- Inventory Form -->
       <form id="inventory-form">
         <input type="text" id="item-name" placeholder="Item name" required />
         <input type="number" id="item-qty" placeholder="Qty" required />
@@ -54,7 +49,6 @@
         <button type="submit">Add Item</button>
       </form>
 
-      <!-- Inventory Display -->
       <div class="inventory-scroll-container">
         <ul id="inventory-list" class="inventory-list"></ul>
       </div>
@@ -69,7 +63,7 @@
   </div>
 
   <script>
-    const username = "amman123"; // Use the current logged-in username
+    const username = "amman123"; 
 
     if (!username) {
       alert("You must log in first.");
@@ -115,7 +109,7 @@
         .filter(item => currentLocation === 'none' || item.storage === currentLocation || !item.storage);
 
       filtered.forEach(({ name, quantity, storage }) => {
-        const safeName = encodeURIComponent(name); // In case name has special characters
+        const safeName = encodeURIComponent(name);
         const li = document.createElement('li');
         li.innerHTML = `
           <span>${quantity} — ${name}${storage ? ` (Stored in: ${storage})` : ''}</span>
@@ -131,7 +125,7 @@
       const index = inventory.findIndex(item => item.name === name);
       if (index !== -1) {
         inventory.splice(index, 1);
-        await updateUserData(); // Persist changes
+        await updateUserData(); 
         renderInventory();
       }
     }
@@ -139,15 +133,13 @@
     // Update user data on the server
     async function updateUserData() {
       try {
-        // Get the current shopping list data
         const response = await fetch(`http://localhost:3000/api/users/${username}`);
         if (!response.ok) {
           throw new Error('Failed to get user data');
         }
         const userData = await response.json();
         const shoppingList = userData.shopping_lists.main.ingredients || [];
-        
-        // Update user data with current inventory and shopping list
+
         const updateResponse = await fetch(`http://localhost:3000/api/users/${username}`, {
           method: 'POST',
           headers: {
@@ -169,7 +161,6 @@
       }
     }
 
-    // Add item form handler
     document.getElementById('inventory-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -180,31 +171,25 @@
       
       if (!name || !qty) return;
       
-      // Create the new pantry item
       const newItem = {
         name: name,
         quantity: `${qty} ${unit}`,
         storage: storage
       };
       
-      // Add to inventory
       inventory.push(newItem);
       
-      // Update server and UI
       await updateUserData();
       renderInventory();
       
-      // Reset form
       e.target.reset();
     });
 
-    // Logout function
-    function logoutUser() {
+    /* function logoutUser() {
       localStorage.removeItem("activeUser");
       window.location.href = "login.html";
-    }
+    } */
 
-    // Load data on page load
     fetchUserData();
   </script>
 </body>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shopping List - Kitchen Kompanion</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plaster&display=swap" rel="stylesheet">
@@ -47,7 +46,6 @@
   <div class="ipad-frame">
     <div class="ipad-camera"></div>
 
-    <!-- Header -->
     <header class="app-header">
       <div class="header-content">
         <h2>K</h2>
@@ -55,7 +53,6 @@
       </div>
     </header>
 
-    <!-- Shopping List Content -->
     <main class="app-content">
       <form id="shopping-form">
         <select id="item-location">
@@ -80,7 +77,6 @@
       <div id="shopping-list"></div>
     </main>
 
-    <!-- Navigation -->
     <nav class="app-navbar">
       <a href="shoppinglist.html" title="Shopping List">
         <img src="icons/shoppinglist.svg" alt="Shopping List" />
@@ -114,7 +110,6 @@
   const shoppingListContainer = document.getElementById('shopping-list');
   const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
 
-  // Fetch user data from the API
   async function fetchUserData() {
     try {
       const response = await fetch(`http://localhost:3000/api/users/${username}`);
@@ -130,7 +125,6 @@
     }
   }
 
-  // Update the user data on the server
   async function updateUserData(shoppingList, pantry) {
     try {
       const response = await fetch(`http://localhost:3000/api/users/${username}`, {
@@ -153,7 +147,6 @@
     }
   }
 
-  // Remove item from shopping list
   async function removeItem(index) {
     const userData = await fetchUserData();
     if (!userData) return;
@@ -165,7 +158,6 @@
     renderList();
   }
 
-  // Add item to pantry
   async function addToPantry(index) {
     const userData = await fetchUserData();
     if (!userData) return;
@@ -173,7 +165,6 @@
     const shoppingList = userData.shopping_lists.main.ingredients;
     const item = shoppingList[index];
     
-    // Add item to pantry with location from form
     const location = document.getElementById('item-location').value;
     const pantryItem = {
       name: item.name,
@@ -181,7 +172,6 @@
       storage: location
     };
     
-    // Add to pantry and remove from shopping list
     userData.pantry.push(pantryItem);
     shoppingList.splice(index, 1);
     
@@ -190,7 +180,6 @@
     alert("Item added to Pantry!");
   }
 
-  // Add item to favorites
   async function addToFavorites(index) {
     const userData = await fetchUserData();
     if (!userData) return;
@@ -198,12 +187,9 @@
     const shoppingList = userData.shopping_lists.main.ingredients;
     const item = shoppingList[index];
     
-    // We'd need to add another API endpoint to handle favorites
-    // For now, just show an alert
     alert("Favorites functionality not implemented yet!");
   }
 
-  // Add item to shopping list
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('item-name').value.trim();
@@ -215,27 +201,21 @@
     const userData = await fetchUserData();
     if (!userData) return;
     
-    // Create the quantity string
     const quantityStr = `${qty} ${unit}`;
     
-    // Get the current shopping list
     const shoppingList = userData.shopping_lists.main.ingredients;
     
-    // Add the new item
     shoppingList.push({ 
       name: name, 
       quantity: quantityStr 
     });
 
-    // Update the server with the new shopping list
     await updateUserData(shoppingList, userData.pantry);
 
-    // Reset form and render updated list
     form.reset();
     renderList();
   });
 
-  // Add all items to kitchen inventory
   addToInventoryBtn.addEventListener('click', async () => {
     const userData = await fetchUserData();
     if (!userData) return;
@@ -243,7 +223,6 @@
     const shoppingList = userData.shopping_lists.main.ingredients;
     const location = document.getElementById('item-location').value;
     
-    // Add all shopping list items to pantry
     const pantryItems = userData.pantry || [];
     
     shoppingList.forEach(item => {
@@ -254,13 +233,11 @@
       });
     });
     
-    // Clear shopping list
     await updateUserData([], pantryItems);
     alert("All items added to Kitchen Inventory!");
     renderList();
   });
 
-  // Render shopping list
   async function renderList() {
     const userData = await fetchUserData();
     if (!userData) return;
@@ -287,7 +264,6 @@
     }
   }
 
-  // Call renderList when the page is ready
   document.addEventListener('DOMContentLoaded', () => {
     renderList();
   });

@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plaster&display=swap" rel="stylesheet">
   <title>Kitchen Kompanion</title>
   <link rel="stylesheet" href="style/main.css" />
 </head>
 <body>
 
   <div class="ipad-frame">
-    <!-- Simulated camera / notch -->
     <div class="ipad-camera"></div>
+    <header class="app-header">
+      <div class="header-content">
+        <h2>K</h2>
+        <h3>Welcome</h3>
+      </div>
+    </header>
 
-    <!-- Header -->
-    <header class="app-header">🍳 Kitchen Kompanion</header>
-    <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
-
-    <!-- Main Content -->
     <main class="app-content">
       <h2>Welcome!</h2>
       <p>This is your personalized kitchen assistant for managing groceries, inventory, and recipes. Use the navigation bar below to get started!</p>
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="kitchen.html" class="continue-btn">Continue</a>
+      </div>
+      
     </main>
 
-    <!-- Bottom Navigation Bar -->
     <nav class="app-navbar">
       <a href="shoppinglist.html" title="Shopping List">
         <img src="icons/shoppinglist.svg" alt="Shopping List" />

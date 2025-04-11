@@ -8,8 +8,6 @@ const letterColorMap = {
   Y: "#9370db",  Z: "#8fbc8f"
 };
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const collectionTitle = params.get('collection') || "";
@@ -19,35 +17,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Display the collection title in the header
   document.getElementById('collectionTitle').textContent = collectionTitle;
 
-  // Load data from both JSONs
   Promise.all([
     fetch('data/recipeCollection.json').then(r => r.json()),
     fetch('data/recipes.json').then(r => r.json())
   ])
   .then(([collectionsData, recipesData]) => {
-    // 1) Find the chosen collection
     const found = (collectionsData.collections || []).find(c => c.title === collectionTitle);
     if (!found) {
       console.error("Collection not found:", collectionTitle);
       return;
     }
-
-    // 2) Build a combined array of "all recipes" from your existing logic
     const allRecipes = [
       ...(recipesData.savedRecipes || []),
       ...(recipesData.recentlyViewedRecipes || [])
-      // add more arrays if needed
     ];
 
-    // 3) For each name in found.recipeNames, find the corresponding recipe in allRecipes
     const matchingRecipes = found.recipeNames.map(name => {
       return allRecipes.find(r => r.name === name);
-    }).filter(r => r); // remove null if any name not found
+    }).filter(r => r); 
 
-    // 4) Render these "narrow" recipe cards
     renderCollectionRecipes(matchingRecipes);
   })
   .catch(err => console.error("Error loading data:", err));
@@ -56,19 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderCollectionRecipes(recipes) {
   const container = document.getElementById('collectionRecipesContainer');
   container.innerHTML = '';
-
-  // We'll need to offset indices the same way we do in index.html
-  // or we can search by name in the detail page.
-  // For simplicity, let's search by name in the detail page, so no offset is needed.
-  // We'll do "openRecipeByName(recipe.name)" if you'd like.
-
   recipes.forEach(recipe => {
     const card = document.createElement('div');
     card.classList.add('narrow-recipe-card');
-
-    // On click => open the same detail page, but let's do a name-based approach
-    // If your existing detail page uses "id", then we need to figure out the ID offset
-    // or create an alternative detail approach. Let's do name-based for clarity:
     card.onclick = () => {
       openRecipeByName(recipe.name);
     };
