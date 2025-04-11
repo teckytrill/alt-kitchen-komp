@@ -46,6 +46,11 @@
           <option value="cups">cups</option>
           <option value="liters">liters</option>
         </select>
+        <select id="item-storage">
+          <option value="Fridge">Fridge</option>
+          <option value="Pantry">Pantry</option>
+          <option value="Freezer">Freezer</option>
+        </select>
         <button type="submit">Add Item</button>
       </form>
 
@@ -121,28 +126,77 @@
     }
 
     // Remove item by name
-    function removeItem(encodedName) {
+    async function removeItem(encodedName) {
       const name = decodeURIComponent(encodedName);
       const index = inventory.findIndex(item => item.name === name);
       if (index !== -1) {
         inventory.splice(index, 1);
-        updateUserData(); // Persist changes
+        await updateUserData(); // Persist changes
         renderInventory();
       }
     }
 
-    // Placeholder: Sync inventory with backend
-    function updateUserData() {
-      fetch(`http://localhost:3000/api/users/${username}/pantry`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pantry: inventory }),
-      }).catch(err => {
+    // Update user data on the server
+    async function updateUserData() {
+      try {
+        // Get the current shopping list data
+        const response = await fetch(`http://localhost:3000/api/users/${username}`);
+        if (!response.ok) {
+          throw new Error('Failed to get user data');
+        }
+        const userData = await response.json();
+        const shoppingList = userData.shopping_lists.main.ingredients || [];
+        
+        // Update user data with current inventory and shopping list
+        const updateResponse = await fetch(`http://localhost:3000/api/users/${username}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            shoppingList: shoppingList,
+            kitchenInventory: inventory 
+          }),
+        });
+        
+        if (!updateResponse.ok) {
+          throw new Error('Failed to update user data');
+        }
+        
+      } catch (err) {
         console.error('Failed to update user data:', err);
-      });
+        alert('Failed to save changes. Please try again.');
+      }
     }
+
+    // Add item form handler
+    document.getElementById('inventory-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('item-name').value.trim();
+      const qty = document.getElementById('item-qty').value;
+      const unit = document.getElementById('item-unit').value;
+      const storage = document.getElementById('item-storage').value;
+      
+      if (!name || !qty) return;
+      
+      // Create the new pantry item
+      const newItem = {
+        name: name,
+        quantity: `${qty} ${unit}`,
+        storage: storage
+      };
+      
+      // Add to inventory
+      inventory.push(newItem);
+      
+      // Update server and UI
+      await updateUserData();
+      renderInventory();
+      
+      // Reset form
+      e.target.reset();
+    });
 
     // Logout function
     function logoutUser() {

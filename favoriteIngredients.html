@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorite Ingredients - Kitchen Kompanion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+  <div class="ipad-frame">
+    <div class="ipad-camera"></div>
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h2>K</h2>
+        <h3>Favorite Ingredients</h3>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="app-content">
+      <input type="text" id="search-favorites" placeholder="Search favorite recipes...">
+      <div class="filters">
+        <button onclick="filterFavorites('all')">All</button>
+        <button onclick="filterFavorites('Vegetarian')">Vegetarian</button>
+        <button onclick="filterFavorites('Vegan')">Vegan</button>
+        <button onclick="filterFavorites('Gluten-Free')">Gluten-Free</button>
+      </div>
+      <ul id="fav-ingredients-list"></ul>
+    </main>
+
+    <!-- Navigation -->
+    <nav class="app-navbar">
+      <a href="shoppinglist.html"><img src="icons/shoppinglist.svg" alt="Shopping List"></a>
+      <a href="kitchen.html"><img src="icons/kitchen.svg" alt="Kitchen"></a>
+      <a href="recipes.html"><img src="icons/recipes.svg" alt="Recipes"></a>
+      <a href="profile.html"><img src="icons/profile.svg" alt="Profile"></a>
+    </nav>
+  </div>
+
+  <script>
+    const username = 'amman123';
+  
+    fetch(`/api/users/${username}`)
+      .then(res => res.json())
+      .then(user => {
+        const list = document.getElementById('fav-ingredients-list');
+        user.favorite_ingredients.forEach(ingredient => {
+          const card = document.createElement('li');
+          card.classList.add('ingredient-card');
+  
+          card.innerHTML = `
+            <span class="ingredient-name">${ingredient.name}</span>
+            <div class="ingredient-actions">
+              <button onclick="addToShoppingList('${ingredient.name}')">🛒</button>
+              <button onclick="addToPantry('${ingredient.name}')">🍽️</button>
+              <button onclick="unfavorite('${ingredient.name}')">❌</button>
+            </div>
+          `;
+  
+          list.appendChild(card);
+        });
+      })
+      .catch(err => console.error('Error fetching favorite ingredients:', err));
+  
+    // Add to Pantry
+  function addToPantry(name) {
+    const hardcodedQuantity = '1 pcs';
+    const hardcodedStorage = 'Fridge';
+
+    const newItem = {
+      name,
+      quantity: hardcodedQuantity,
+      storage: hardcodedStorage
+    };
+
+    // Add to local inventory for rendering
+    inventory.push(newItem);
+    updateUserData(); // updates pantry backend
+    renderInventory();
+
+    alert(`${name} added to pantry (${hardcodedQuantity}, stored in ${hardcodedStorage})`);
+  }
+
+  // Add to Shopping List
+  function addToShoppingList(name) {
+    const hardcodedQuantity = '1 pcs';
+
+    fetch(`http://localhost:3000/api/users/${username}/shopping_lists/main`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ingredient: {
+          name,
+          quantity: hardcodedQuantity
+        }
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to add to shopping list');
+      alert(`${name} added to shopping list (${hardcodedQuantity})`);
+    })
+    .catch(err => {
+      console.error('Failed to update shopping list:', err);
+    });
+  }
+
+  // Unfavorite Ingredient
+  function unfavorite(name) {
+    fetch(`http://localhost:3000/api/users/${username}/favorite_ingredients/${encodeURIComponent(name)}`, {
+      method: 'DELETE'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to remove favorite');
+      alert(`${name} has been removed from your favorites.`);
+      // Optionally remove from DOM:
+      location.reload(); // or re-fetch and re-render the list
+    })
+    .catch(err => {
+      console.error('Failed to unfavorite ingredient:', err);
+    });
+  }
+
+  </script>
+  
+</body>
+</html>

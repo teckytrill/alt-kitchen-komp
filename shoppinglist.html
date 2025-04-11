@@ -10,8 +10,38 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plaster&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="/style/main.css" />
 
-  <link rel="stylesheet" href="style/main.css" />
+  <style>
+    .shopping-item-card {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .shopping-item-card span {
+      flex-grow: 1;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    .button-group button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button-group button:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
   <div class="ipad-frame">
@@ -27,7 +57,6 @@
 
     <!-- Shopping List Content -->
     <main class="app-content">
-
       <form id="shopping-form">
         <select id="item-location">
           <option value="Fridge">Fridge</option>
@@ -48,7 +77,7 @@
 
       <button id="add-to-inventory-btn">➕ Add to Inventory</button>
 
-      <ul id="shopping-list"></ul>
+      <div id="shopping-list"></div>
     </main>
 
     <!-- Navigation -->
@@ -77,21 +106,18 @@
     window.location.href = "login.html";
   }
 
-
-
-
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   const form = document.getElementById('shopping-form');
-  const list = document.getElementById('shopping-list');
+  const shoppingListContainer = document.getElementById('shopping-list');
   const addToInventoryBtn = document.getElementById('add-to-inventory-btn');
 
   // Fetch user data from the API
   async function fetchUserData() {
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${username}`); // Make sure this matches the correct API endpoint
+      const response = await fetch(`http://localhost:3000/api/users/${username}`);
       if (!response.ok) {
         throw new Error('User data not found');
       }
@@ -100,70 +126,85 @@
     } catch (error) {
       console.error(error);
       alert("Failed to load user data.");
+      return null;
     }
   }
 
   // Update the user data on the server
-  async function updateUserData() {
-    const shoppingList = user.shoppingList;
-    const kitchenInventory = user.kitchenInventory;
-
+  async function updateUserData(shoppingList, pantry) {
     try {
       const response = await fetch(`http://localhost:3000/api/users/${username}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ shoppingList, kitchenInventory }),
+        body: JSON.stringify({ 
+          shoppingList: shoppingList,
+          kitchenInventory: pantry
+        }),
       });
+      
       if (!response.ok) {
         throw new Error('Failed to update user data');
       }
-      const result = await response.json();
-      console.log(result);
-      alert(result.message);
+      
+      return await response.json();
     } catch (error) {
       console.error(error);
       alert("Error updating user data.");
     }
   }
 
-
-  // Initialize user data
-  let user = { shoppingList: [], kitchenInventory: [] };
-
-  // Fetch user data from the API
-  fetchUserData().then(data => {
-    if (data) {
-      // Ensure shoppingLists and main exist before accessing
-      user = {
-        shoppingList: data.shoppingLists?.main?.ingredients || [], // Use optional chaining and provide a fallback
-        kitchenInventory: data.pantry || [], // Fallback for pantry as well
-      };
-      renderList();
-    }
-  });
-
-  // Render shopping list
-  function renderList() {
-    list.innerHTML = '';
-    user.shoppingList.forEach((item, index) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${item.quantity} ${item.name}</span>
-        <button onclick="removeItem(${index})">🗑</button>`;
-      list.appendChild(li);
-    });
-  }
-
-
   // Remove item from shopping list
-  function removeItem(index) {
-    user.shoppingList.splice(index, 1);
-    updateUserData(); // Update the server with new shopping list
+  async function removeItem(index) {
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    const shoppingList = userData.shopping_lists.main.ingredients;
+    shoppingList.splice(index, 1);
+    
+    await updateUserData(shoppingList, userData.pantry);
     renderList();
   }
 
+  // Add item to pantry
+  async function addToPantry(index) {
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    const shoppingList = userData.shopping_lists.main.ingredients;
+    const item = shoppingList[index];
+    
+    // Add item to pantry with location from form
+    const location = document.getElementById('item-location').value;
+    const pantryItem = {
+      name: item.name,
+      quantity: item.quantity,
+      storage: location
+    };
+    
+    // Add to pantry and remove from shopping list
+    userData.pantry.push(pantryItem);
+    shoppingList.splice(index, 1);
+    
+    await updateUserData(shoppingList, userData.pantry);
+    renderList();
+    alert("Item added to Pantry!");
+  }
+
+  // Add item to favorites
+  async function addToFavorites(index) {
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    const shoppingList = userData.shopping_lists.main.ingredients;
+    const item = shoppingList[index];
+    
+    // We'd need to add another API endpoint to handle favorites
+    // For now, just show an alert
+    alert("Favorites functionality not implemented yet!");
+  }
+
   // Add item to shopping list
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('item-name').value.trim();
     const qty = parseInt(document.getElementById('item-qty').value);
@@ -171,23 +212,85 @@
 
     if (!name || isNaN(qty)) return;
 
-    user.shoppingList.push({ name, quantity: `${qty} ${unit}` });
-    updateUserData(); // Update the server with new shopping list
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    // Create the quantity string
+    const quantityStr = `${qty} ${unit}`;
+    
+    // Get the current shopping list
+    const shoppingList = userData.shopping_lists.main.ingredients;
+    
+    // Add the new item
+    shoppingList.push({ 
+      name: name, 
+      quantity: quantityStr 
+    });
+
+    // Update the server with the new shopping list
+    await updateUserData(shoppingList, userData.pantry);
+
+    // Reset form and render updated list
     form.reset();
     renderList();
-
-    console.log(user.shoppingList);
   });
 
-  // Add to kitchen inventory
-  addToInventoryBtn.addEventListener('click', () => {
-    user.kitchenInventory.push(...user.shoppingList);
-    user.shoppingList = [];
-    updateUserData(); // Update the server with kitchen inventory and cleared shopping list
-    alert("Items added to Kitchen Inventory!");
+  // Add all items to kitchen inventory
+  addToInventoryBtn.addEventListener('click', async () => {
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    const shoppingList = userData.shopping_lists.main.ingredients;
+    const location = document.getElementById('item-location').value;
+    
+    // Add all shopping list items to pantry
+    const pantryItems = userData.pantry || [];
+    
+    shoppingList.forEach(item => {
+      pantryItems.push({
+        name: item.name,
+        quantity: item.quantity,
+        storage: location
+      });
+    });
+    
+    // Clear shopping list
+    await updateUserData([], pantryItems);
+    alert("All items added to Kitchen Inventory!");
     renderList();
   });
-</script>
 
+  // Render shopping list
+  async function renderList() {
+    const userData = await fetchUserData();
+    if (!userData) return;
+    
+    const ingredients = userData.shopping_lists.main.ingredients;
+    shoppingListContainer.innerHTML = '';
+
+    if (ingredients && ingredients.length > 0) {
+      ingredients.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.classList.add('shopping-item-card');
+        div.innerHTML = `
+          <span>${item.quantity} ${item.name}</span>
+          <div class="button-group">
+            <button onclick="removeItem(${index})">🗑</button>
+            <button onclick="addToPantry(${index})">Add to Pantry</button>
+            <button onclick="addToFavorites(${index})">Add to Favorites</button>
+          </div>
+        `;
+        shoppingListContainer.appendChild(div);
+      });
+    } else {
+      shoppingListContainer.innerHTML = '<p>No items in the shopping list.</p>';
+    }
+  }
+
+  // Call renderList when the page is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    renderList();
+  });
+  </script>
 </body>
 </html>

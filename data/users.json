@@ -14,12 +14,7 @@
       "main": {
         "id": 1,
         "name": "Weekly Groceries",
-        "ingredients": [
-          {
-            "name": "Milk",
-            "quantity": "2 pcs"
-          }
-        ]
+        "ingredients": []
       }
     },
     "archived_lists": [
@@ -30,7 +25,7 @@
         "ingredients": [
           {
             "name": "Cranberries",
-            "quantity": "cranberries.png"
+            "quantity": 2
           },
           {
             "name": "Stuffing Mix",
@@ -41,49 +36,17 @@
     ],
     "pantry": [
       {
-        "name": "Eggs",
-        "quantity": "3 packs",
+        "name": "Noodles",
+        "quantity": "12 pcs",
         "storage": "Fridge"
       },
       {
-        "name": "Flour",
-        "quantity": "1 bag",
-        "storage": "Pantry"
-      },
-      {
-        "name": "cookie",
-        "quantity": "2 pcs"
-      },
-      {
-        "name": "celery",
-        "quantity": "3 pcs"
-      },
-      {
-        "name": "milk",
-        "quantity": "1 pcs"
-      },
-      {
-        "name": "icecream",
-        "quantity": "4 cups"
-      },
-      {
-        "name": "Milk",
-        "quantity": "2 pcs"
-      },
-      {
-        "name": "eggs",
-        "quantity": "1111 pcs"
-      },
-      {
-        "name": "Waffles",
-        "quantity": "1 pcs"
+        "name": "Celery",
+        "quantity": "6 pcs",
+        "storage": "Fridge"
       }
     ],
     "favorite_ingredients": [
-      {
-        "name": "Carrots",
-        "timestamp": "2025-03-30T12:34:56Z"
-      },
       {
         "name": "Flour",
         "timestamp": "2025-03-30T12:34:56Z"
