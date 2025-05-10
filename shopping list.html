@@ -457,20 +457,26 @@
                     <label class="form-label">Quantity</label>
                     <input type="text" class="form-input" id="new-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select class="form-input" id="new-item-category">
+                    <label class="form-label">Food Category</label>
+                    <select class="form-input" id="new-item-food-category">
                         <option value="fruits">Fruits</option>
                         <option value="vegetables">Vegetables</option>
                         <option value="grains">Grains & Cereals</option>
                         <option value="proteins">Proteins</option>
                         <option value="dairy">Dairy & Alternatives</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Storage Location</label>
+                    <select class="form-input" id="new-item-storage-location">
                         <option value="pantry">Pantry</option>
                         <option value="fridge">Fridge</option>
                         <option value="freezer">Freezer</option>
                     </select>
                 </div>
-            </div>
             <div class="modal-buttons">
                 <button class="modal-button cancel" id="cancel-add-item">Cancel</button>
                 <button class="modal-button confirm" id="confirm-add-item">Add</button>
@@ -492,13 +498,19 @@
                     <input type="text" class="form-input" id="edit-item-quantity" placeholder="e.g., 2 Units, 1 Pint">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select class="form-input" id="edit-item-category">
+                    <label class="form-label">Food Category</label>
+                    <select class="form-input" id="edit-item-food-category">
                         <option value="fruits">Fruits</option>
                         <option value="vegetables">Vegetables</option>
                         <option value="grains">Grains & Cereals</option>
                         <option value="proteins">Proteins</option>
                         <option value="dairy">Dairy & Alternatives</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Storage Location</label>
+                    <select class="form-input" id="edit-item-storage-location">
                         <option value="pantry">Pantry</option>
                         <option value="fridge">Fridge</option>
                         <option value="freezer">Freezer</option>
@@ -616,6 +628,7 @@
         currentListId = activeLists[0].id;
         renderActiveList(activeLists[0]);
     }
+    setTimeout(addActionButtons, 100);
 }
         
         function switchList(listId) {
@@ -659,6 +672,7 @@
             listHeader.innerHTML = `
                 <div class="list-title">${list.name}</div>
                 <div class="edit-icon" onclick="editListName(${list.id})">✏️</div>
+                <button class="button archive-btn" onclick="archiveList(${list.id})">Archive</button>
             `;
             listsContainer.appendChild(listHeader);
             
@@ -729,28 +743,41 @@
         }
         
         // Render single item
-        function renderItem(item) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-            itemElement.dataset.id = item.id;
-            itemElement.dataset.category = item.category;
-            
-            itemElement.innerHTML = `
-                <input type="checkbox" class="item-checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItemCheck(${item.id})">
-                <div class="item-color"></div>
-                <div class="item-details">
-                    <div class="item-name ${item.checked ? 'checked' : ''}">${item.name}</div>
-                    <div class="item-quantity">${item.quantity} <span class="quantity-edit" onclick="editItem(${item.id})">✏️</span></div>
+       function renderItem(item) {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'item';
+        itemElement.dataset.id = item.id;
+        
+        // Set both category data attributes for filtering
+        itemElement.dataset.foodCategory = item.foodCategory || 
+            (['fruits', 'vegetables', 'grains', 'proteins', 'dairy'].includes(item.category) ? item.category : 'other');
+        
+        itemElement.dataset.storageLocation = item.storageLocation || 
+            (['pantry', 'fridge', 'freezer'].includes(item.category) ? item.category : 'pantry');
+        
+        // For backwards compatibility with existing filtering
+        itemElement.dataset.category = item.foodCategory || item.category || 'other';
+        
+        itemElement.innerHTML = `
+            <input type="checkbox" class="item-checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItemCheck(${item.id})">
+            <div class="item-color"></div>
+            <div class="item-details">
+                <div class="item-name ${item.checked ? 'checked' : ''}">${item.name}</div>
+                <div class="item-quantity">${item.quantity} <span class="quantity-edit" onclick="editItem(${item.id})">✏️</span></div>
+                <div class="item-categories">
+                    <span class="item-food-category">${item.foodCategory || item.category || 'other'}</span>
+                    <span class="item-storage-location">${item.storageLocation || 'pantry'}</span>
                 </div>
-                <div class="item-actions">
-                    <span class="action-icon heart-icon" onclick="toggleFavorite(${item.id})">❤️</span>
-                    <span class="action-icon" onclick="duplicateItem(${item.id})">📋</span>
-                    <span class="action-icon" onclick="removeItem(${item.id})">🗑️</span>
-                </div>
-            `;
-            
-            listsContainer.appendChild(itemElement);
-        }
+            </div>
+            <div class="item-actions">
+                <span class="action-icon heart-icon" onclick="toggleFavorite(${item.id})">❤️</span>
+                <span class="action-icon" onclick="duplicateItem(${item.id})">📋</span>
+                <span class="action-icon" onclick="removeItem(${item.id})">🗑️</span>
+            </div>
+        `;
+        
+        listsContainer.appendChild(itemElement);
+    }
         
         // Render empty lists state
         function renderEmptyListsState() {
@@ -853,7 +880,8 @@
         function addNewItem() {
             const itemName = document.getElementById('new-item-name').value.trim();
             const itemQuantity = document.getElementById('new-item-quantity').value.trim();
-            const itemCategory = document.getElementById('new-item-category').value;
+            const itemFoodCategory = document.getElementById('new-item-food-category').value;
+            const itemStorageLocation = document.getElementById('new-item-storage-location').value;
             
             if (!itemName) {
                 alert('Please enter an item name');
@@ -869,7 +897,8 @@
                 id: itemIdCounter++,
                 name: itemName,
                 quantity: itemQuantity,
-                category: itemCategory,
+                foodCategory: itemFoodCategory,
+                storageLocation: itemStorageLocation,
                 checked: false
             };
             
@@ -886,7 +915,8 @@
         function resetAddItemForm() {
             document.getElementById('new-item-name').value = '';
             document.getElementById('new-item-quantity').value = '';
-            document.getElementById('new-item-category').value = 'fruits';
+            document.getElementById('new-item-food-category').value = 'fruits';
+            document.getElementById('new-item-storage-location').value = 'pantry';
         }
         
         // Toggle item check
@@ -902,13 +932,29 @@
         
         // Edit item
         function editItem(itemId) {
-            const currentList = shoppingLists.find(list => list.id === currentListId);
+           const currentList = shoppingLists.find(list => list.id === currentListId);
             const item = currentList.items.find(item => item.id === itemId);
             
             if (item) {
                 document.getElementById('edit-item-name').value = item.name;
                 document.getElementById('edit-item-quantity').value = item.quantity;
-                document.getElementById('edit-item-category').value = item.category;
+                
+                // Handle items that may have different data structures (old vs new)
+                if (item.foodCategory) {
+                    document.getElementById('edit-item-food-category').value = item.foodCategory;
+                } else if (item.category && ['fruits', 'vegetables', 'grains', 'proteins', 'dairy'].includes(item.category)) {
+                    document.getElementById('edit-item-food-category').value = item.category;
+                } else {
+                    document.getElementById('edit-item-food-category').value = 'other';
+                }
+                
+                if (item.storageLocation) {
+                    document.getElementById('edit-item-storage-location').value = item.storageLocation;
+                } else if (item.category && ['pantry', 'fridge', 'freezer'].includes(item.category)) {
+                    document.getElementById('edit-item-storage-location').value = item.category;
+                } else {
+                    document.getElementById('edit-item-storage-location').value = 'pantry';
+                }
                 
                 // Store item ID for update
                 editItemModal.dataset.itemId = itemId;
@@ -922,7 +968,8 @@
             const itemId = parseInt(editItemModal.dataset.itemId);
             const itemName = document.getElementById('edit-item-name').value.trim();
             const itemQuantity = document.getElementById('edit-item-quantity').value.trim();
-            const itemCategory = document.getElementById('edit-item-category').value;
+            const itemFoodCategory = document.getElementById('edit-item-food-category').value;
+            const itemStorageLocation = document.getElementById('edit-item-storage-location').value;
             
             if (!itemName) {
                 alert('Please enter an item name');
@@ -940,7 +987,8 @@
             if (item) {
                 item.name = itemName;
                 item.quantity = itemQuantity;
-                item.category = itemCategory;
+                item.foodCategory = itemFoodCategory;
+                item.storageLocation = itemStorageLocation;
                 
                 editItemModal.style.display = 'none';
                 
@@ -1096,33 +1144,71 @@
         
         // Filter by category
         function filterByCategory(category) {
-            const items = document.querySelectorAll('.item');
+            const foodCategories = ['fruits', 'vegetables', 'grains', 'proteins', 'dairy'];
+            const storageCategories = ['pantry', 'fridge', 'freezer'];
             
-            // If there's an active filter on this category already, remove it
-            const alreadyFiltered = document.querySelector('.category-filters .category.' + category).classList.contains('active');
+            const isFoodCategory = foodCategories.includes(category);
+            const isStorageCategory = storageCategories.includes(category);
             
-            // Reset all filters
-            document.querySelectorAll('.category-filters .category').forEach(cat => {
-                cat.classList.remove('active');
+            // Find the clicked filter button
+            const clickedFilter = document.querySelector(`.category.${category}`);
+            const isActive = clickedFilter.classList.contains('active');
+            
+            // Handle toggling the filter on/off
+            if (isActive) {
+                // Turn off this filter
+                clickedFilter.classList.remove('active');
+            } else {
+                // Turn off other filters in the same category group
+                if (isFoodCategory) {
+                    foodCategories.forEach(cat => {
+                        const catElement = document.querySelector(`.category.${cat}`);
+                        if (catElement) catElement.classList.remove('active');
+                    });
+                } else if (isStorageCategory) {
+                    storageCategories.forEach(cat => {
+                        const catElement = document.querySelector(`.category.${cat}`);
+                        if (catElement) catElement.classList.remove('active');
+                    });
+                }
+                
+                // Turn on this filter
+                clickedFilter.classList.add('active');
+            }
+            
+            // Get active filters
+            let activeFoodFilter = null;
+            let activeStorageFilter = null;
+            
+            foodCategories.forEach(cat => {
+                const catElement = document.querySelector(`.category.${cat}`);
+                if (catElement && catElement.classList.contains('active')) {
+                    activeFoodFilter = cat;
+                }
             });
             
-            // If the filter wasn't already active, apply it
-            if (!alreadyFiltered) {
-                document.querySelector('.category-filters .category.' + category).classList.add('active');
+            storageCategories.forEach(cat => {
+                const catElement = document.querySelector(`.category.${cat}`);
+                if (catElement && catElement.classList.contains('active')) {
+                    activeStorageFilter = cat;
+                }
+            });
+            
+            // Apply filters to items
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                const itemFoodCategory = item.dataset.foodCategory;
+                const itemStorageLocation = item.dataset.storageLocation;
                 
-                items.forEach(item => {
-                    if (item.dataset.category === category) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            } else {
-                // If the filter was already active, show all items
-                items.forEach(item => {
+                const matchesFood = !activeFoodFilter || itemFoodCategory === activeFoodFilter;
+                const matchesStorage = !activeStorageFilter || itemStorageLocation === activeStorageLocation;
+                
+                if (matchesFood && matchesStorage) {
                     item.style.display = 'flex';
-                });
-            }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
         
         // Sort items
@@ -1159,18 +1245,16 @@
         // Add action buttons to list headers (archive button)
         function addActionButtons() {
             const listHeader = document.querySelector('.list-header');
-            
-            if (listHeader) {
-                // Check if we already have an archive button
-                if (!listHeader.querySelector('.archive-btn')) {
-                    const archiveBtn = document.createElement('button');
-                    archiveBtn.className = 'button archive-btn';
-                    archiveBtn.textContent = 'Archive';
-                    archiveBtn.addEventListener('click', () => archiveList(currentListId));
-                    
-                    listHeader.appendChild(archiveBtn);
-                }
+    
+            if (listHeader && !listHeader.querySelector('.archive-btn')) {
+                const archiveBtn = document.createElement('button');
+                archiveBtn.className = 'button archive-btn';
+                archiveBtn.textContent = 'Archive';
+                archiveBtn.addEventListener('click', () => archiveList(currentListId));
+        
+                listHeader.appendChild(archiveBtn);
             }
+
         }
         
         // Add CSS to highlight active category filter
@@ -1219,6 +1303,32 @@
         }
     }
         
+        const style = document.createElement('style');
+    style.textContent = `
+            .item-categories {
+                display: flex;
+                gap: 8px;
+                margin-top: 4px;
+                font-size: 12px;
+            }
+            
+            .item-food-category, .item-storage-location {
+                padding: 2px 6px;
+                border-radius: 10px;
+                background-color: #f0f0f0;
+            }
+            
+            .item-food-category {
+                color: #5c7064;
+            }
+            
+            .item-storage-location {
+                color: #a85c44;
+            }
+        `;
+document.head.appendChild(style);
+
+
         // Initialize app when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
@@ -1241,7 +1351,7 @@
                 }
             });
         });
-        
+
     </script>
 </body>
 </html>
